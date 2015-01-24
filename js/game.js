@@ -15,6 +15,9 @@ function Game() {
 	/** Current scene of the game */
 	var currentScene = null;
 	
+    /** sound engine */
+    this.audio = new Audio();
+    
 	/** Inventory */
 	var inventory = new Inventory();
 	this.getInventory = function() { return inventory; }
