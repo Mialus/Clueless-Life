@@ -285,7 +285,7 @@ initGameChap3 = function(canvas) {
         game.audio.load("gamedata/sounds/babling-01.mp3", function (buffer) {
             bable = function () {
                 babyIsBabling = game.audio.play(buffer, 0.25);
-                babyIsBabling.addEventListener("ended", bable);
+                babyIsBabling.addEventListener("ended", function () { if (babyIsBabling != false) bable();} );
             };
             bable();
         });
