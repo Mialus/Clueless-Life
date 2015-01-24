@@ -9,7 +9,7 @@
  *	@param	bool	isRunning		boolean to activate animation
  *	@param	callback
  */
-function Character(imgSprite, arret, movement, callback){
+function Character(imgSprite, arret, movement, callback, audioUri){
 	
 	var img = imgSprite;
 	
@@ -34,6 +34,29 @@ function Character(imgSprite, arret, movement, callback){
 	/** Direction in which the character is oriented (expecting "N", "NE", "E", "SE", "S", "SW", "W", "NW") */
 	var direction = direction;
 	
+    /** audio resources*/
+    var audio = null;
+    var audioUri = audioUri;
+    var isPlaying = false;
+    
+    this.loadAudio = function() {
+        if (audioUri) {
+            game.audio.load(audioUri, function (buffer) {audio = buffer;});
+        }
+    };
+    
+    this.playAudio = function() {
+        if (audio && !isPlaying) {
+            isPlaying = game.audio.play(audio, 1.0, false, 2.0);
+        }
+    }
+    this.stopAudio = function () {
+        if (audio && isPlaying) {
+            game.audio.stop(isPlaying);
+            isPlaying = false;
+        }
+    }
+    
 	/**
 	 *	Sets the direction in which the character is oriented.
 	 *	@param 		String		newDir 		the new direction (expecting "N", "NE", "E", "SE", "S", "SW", "W", "NW")	
@@ -192,6 +215,7 @@ function Animation(_img, _sourceHeight, _sourceWidth, _sourceSpriteSheetY, _sour
 	 *	@param 	int			posY		the Y position where the bottom of the character is located
 	 */
 	this.draw = function(context, _posX, _posY) {
+        
 		posX = _posX;
 		posY = _posY;
 		// case of a flipped context
@@ -353,6 +377,7 @@ function CharacterDisplay(_chId, _charObj, _charMesh, _defaultPosition) {
 			}
 			
 			if (targetPoint.length == 0) {
+                charObj.stopAudio();
 				if (orientationWhenPointIsReached != null) {
 					charObj.setDirection(orientationWhenPointIsReached);
 					orientationWhenPointIsReached = null;		
@@ -367,6 +392,8 @@ function CharacterDisplay(_chId, _charObj, _charMesh, _defaultPosition) {
 			return;
 		}
 		
+        charObj.playAudio();
+        
 		var vecX = targetPoint[0].x - currentPoint.x;
 		var vecY = targetPoint[0].y - currentPoint.y;
 		

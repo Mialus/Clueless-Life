@@ -81,7 +81,7 @@ function Item(_id, _desc, _spInScene, _x, _y, _spInInventory) {
 }
 
 
-function InteractiveArea(_id, _desc, _point, _radius) {
+function InteractiveArea(_id, _desc, _point, _radius, _audioUri) {
 
 	this.id = _id;
 
@@ -105,6 +105,13 @@ function InteractiveArea(_id, _desc, _point, _radius) {
 	var radius = _radius;
 	this.getRadius = function() { return radius; }
 	
+    // the audio file associated with the element
+    this.audioBuffer = null;
+    if (_audioUri) {
+        var _this = this;
+        game.audio.load(_audioUri, function (buffer) {_this.audioBuffer = buffer;});
+    }
+    
 	// closest point to the area
 	this.getClosestPoint = function() { return position; }
 
@@ -120,6 +127,12 @@ function InteractiveArea(_id, _desc, _point, _radius) {
 	// function to execute when the object is looked in the scene
 	this.onLookAt = null;
 		
+    this.playAudio = function () {
+        if (this.audioBuffer) {
+            game.audio.play(this.audioBuffer);
+        }
+    };
+    
 }
 
 

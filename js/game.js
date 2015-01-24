@@ -377,7 +377,8 @@ function Game() {
 				imgPOI = myImg;	
 			}
 		}
-	}		
+	}	
+    
 }
 
 

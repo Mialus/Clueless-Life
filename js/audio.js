@@ -34,10 +34,12 @@ function Audio() {
         
     };
     
-    this.play = function(buffer, volume, loop) {
+    this.play = function(buffer, volume, loop, playbackRate) {
         
         volume = volume || 1.0;
         volume = volume < 0 || volume > 1.0 ? 1.0 : volume;
+        
+        playbackRate = playbackRate || 1.0;
         
         var source      = context.createBufferSource(),
             gainNode    = context.createGain(),
@@ -48,6 +50,7 @@ function Audio() {
         gainNode.gain.value = volume;
         
         source.buffer = buffer;
+        source.playbackRate.value = playbackRate;
         
         if (loop) {
             gainNode.gain.linearRampToValueAtTime(0, currTime);
@@ -66,7 +69,12 @@ function Audio() {
                 recurse(buffer, volume, loop);
             }, (duration - 1) * 1000);
         }
+        
+        return source;
     };
     
+    this.stop = function (source) {
+        source.stop(0);
+    };
     
 }
