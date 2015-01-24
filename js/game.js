@@ -201,16 +201,16 @@ function Game() {
  	 *	Updates the action line depending on the current action. 
  	 */
 	this.updateActionLine = function() {
-		var action = (this.onInventory == 0) ? "Aller vers" : "Sélectionner";
+		var action = (this.onInventory == 0) ? "Walk to" : "Select";
 		switch (this.currentAction) {
 			case this.LOOK_AT: 
-				action = "Regarder";
+				action = "Look at";
 				break;
 			case this.USE:
-				action = (this.onSomething == null) ? "Utiliser" : this.onSomething.getActionWord();
+				action = (this.onSomething == null) ? "Use" : this.onSomething.getActionWord();
 				break; 	
 			case this.USE_WITH:			
-				action = "Utiliser " + selectedObject.description + " avec"; 
+				action = "Use " + selectedObject.description + " with"; 
 				break;
 		}
 		var onWhat = (this.onSomething == null) ? "" : this.onSomething.getDescription();
