@@ -96,7 +96,7 @@ function Scene(_name, _desc, _cvs, _bg) {
 	this.getBackgroundImage = function() { return _bg; }  
 
 
-    var darkness = 0;
+    var darkness = 1;
     this.setDarkness = function(d) {
            darkness = d;
     }

@@ -83,12 +83,11 @@ initGameChap3 = function(canvas) {
 	// --- Scene Chambre ---- //
 	var ch3chambre = new Scene("ch3-chambre", "la chambre de bébé", canvas, "gamedata/images/chambreEnfant_NB2.jpg");
 	ch3chambre.addCharacter("perso", new CharacterDisplay("perso", perso, meshChambre(), new Point(70, 460, 1.2)), true);
-    // ch3chambre.setDarkness(0.2);
     game.addScene(ch3chambre);
 
     var ch3couloir = new Scene("ch3-couloir", "le couloir", canvas, "gamedata/images/couloir.jpg");
     ch3couloir.setDarkness(0.1);
-    ch3couloir.addCharacter("perso", new CharacterDisplay("perso", perso, meshCouloir(), new Point(484, 561, 1.2)), true);
+    ch3couloir.addCharacter("perso", new CharacterDisplay("perso", perso, meshCouloir(), new Point(602, 476, 1.2)), true);
     game.addScene(ch3couloir);
     
     var sePoutre = new SceneElement("./gamedata/images/poutre.png", 396, 115);
@@ -120,11 +119,14 @@ initGameChap3 = function(canvas) {
     ch3couloir.addInteractiveArea(iaInterrupteur);
         
     // passages
-    var paCouloirChambre = new Passage(501, 205, ch3chambre, null);
-    var paChambreCouloir = new Passage(501, 205, ch3chambre, null);
+    var paCouloirChambre = new Passage(501, 205, ch3chambre, new Point(70, 460, 1.2));
+    ch3couloir.addPassage(paCouloirChambre);
+    
+    var paChambreCouloir = new Passage(46, 461, ch3couloir, new Point(602, 476, 1.2));
+    ch3chambre.addPassage(paChambreCouloir);
     
     // variables
-    game.setVariableValue("couloirAllume", 0);
+    game.setVariableValue("couloirAllume", 1);
     
 }
 
