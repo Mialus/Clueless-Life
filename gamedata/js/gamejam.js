@@ -4,6 +4,7 @@
  */
 
 var COLOR_PERSO = "#AACCFF";
+var COLOR_JORIS = "#AACCFF";
 
 var imgPerso = new Image();
 imgPerso.src = "./gamedata/images/spritesheet-perso.png";
@@ -80,12 +81,68 @@ initGame = function(canvas) {
 initGameChap3 = function(canvas) {
 
 	// --- Scene Chambre ---- //
-	var ch3chambre = new Scene("ch3-chambre", "la chambre de bébé", canvas, "gamedata/images/chambreEnfant_NB2.jpg", [{uri: "gamedata/sounds/atmo-thunder-rain.mp3", volume: 0.05}]);
-	ch3chambre.addCharacter("perso", new CharacterDisplay("perso", perso, meshChambre(), new Point(100, 660, 1)), true);
-	game.addScene(ch3chambre);
 
+	var ch3chambre = new Scene("ch3-chambre", "la chambre de bébé", canvas, "gamedata/images/chambreEnfant_NB2.jpg", [{uri: "gamedata/sounds/atmo-thunder-rain.mp3", volume: 0.05}]);
+	ch3chambre.addCharacter("perso", new CharacterDisplay("perso", perso, meshChambre(), new Point(70, 460, 1.2)), true);
+    // ch3chambre.setDarkness(0.2);
+    game.addScene(ch3chambre);
+
+    var ch3couloir = new Scene("ch3-couloir", "le couloir", canvas, "gamedata/images/couloir.jpg");
+    ch3couloir.setDarkness(0.1);
+    ch3couloir.addCharacter("perso", new CharacterDisplay("perso", perso, meshCouloir(), new Point(484, 561, 1.2)), true);
+    game.addScene(ch3couloir);
     
+    var sePoutre = new SceneElement("./gamedata/images/poutre.png", 396, 115);
+	sePoutre.getZIndex = function() { return 8; };
+	ch3couloir.addSceneElement(sePoutre);
+	
+    var iaInterrupteur = new InteractiveArea("iaInterrupteur", "l'interrupteur", new Point(620, 230), 8);
+    iaInterrupteur.getClosestPoint = function() { 
+        return new Point(583, 411);
+    }
+    iaInterrupteur.getOrientation = function() {
+        return "NE";   
+    }
+    iaInterrupteur.onLookAt = function() {
+        var msg = game.getVariableValue("couloirAllume") == 1 ? "C'est l'interrupteur du couloir." : "Il y a bien quelque chose, mais je ne vois rien.";
+		game.removeAllMessages();
+		game.messagesToDisplay.push(new Message(msg, COLOR_PERSO, -1, -1, -1));
+		game.displayMessages();
+    }
+    iaInterrupteur.getDescription = function() {
+        return game.getVariableValue("couloirAllume") == 1 ? "l'interrupteur" : "le truc en plastique sur le mur";   
+    }
+    iaInterrupteur.onUse = function() {
+        var newDarkness = (game.getVariableValue("couloirAllume") == 1) ? 0 : 1;
+        game.getCurrentScene().setDarkness(newDarkness);  
+        game.getCurrentScene().redraw();
+        game.setVariableValue("couloirAllume", 1 - game.getVariableValue("couloirAllume"));   
+    }
+    ch3couloir.addInteractiveArea(iaInterrupteur);
+        
+    // passages
+    var paCouloirChambre = new Passage(501, 205, ch3chambre, null);
+    var paChambreCouloir = new Passage(501, 205, ch3chambre, null);
     
+    // variables
+    game.setVariableValue("couloirAllume", 0);
+    
+}
+
+
+
+meshCouloir = function() {
+ 
+    var m = new Mesh();
+    
+    var pChambre1 = new Point(472, 292, 0.5);
+    var pChambre2 = new Point(519, 381, 1);
+    var pSortie = new Point(602, 476, 1.2);
+    
+    m.addSegment(new Segment(pChambre1, pChambre2, 0.5));
+    m.addSegment(new Segment(pChambre2, pSortie, 0.8));
+    
+    return m;    
 }
 
 

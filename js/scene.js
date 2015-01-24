@@ -95,7 +95,7 @@ function Scene(_name, _desc, _cvs, _bg, _ambients) {
 	 * 	Returns the placement of the character
 	 */
 	this.getCharacterInfos = function() {
-		return guybrush.getCharacterInfos();	
+		return characters[playedCharacter].getCharacterObj().getCharacterInfos();	
 	}
 
 	/** Action to do when we enter the scene */
@@ -105,6 +105,11 @@ function Scene(_name, _desc, _cvs, _bg, _ambients) {
 	this.getBackgroundImage = function() { return _bg; }  
 
 
+    var darkness = 0;
+    this.setDarkness = function(d) {
+           darkness = d;
+    }
+    
 	/**
 	 *	@param startingPoint 
 	 */
@@ -202,6 +207,11 @@ function Scene(_name, _desc, _cvs, _bg, _ambients) {
 					context.drawImage(displayStack[i].spriteInScene, displayStack[i].x + OFFSET_X, displayStack[i].y + OFFSET_Y);						
 			}
 		}
+        
+        if (darkness < 1) {
+            context.fillStyle = "rgba(0,0,32," + (1-darkness) +")";
+            context.fillRect(0, 0, CVS_WIDTH, CVS_HEIGHT);
+        }
 	}
 	
 
