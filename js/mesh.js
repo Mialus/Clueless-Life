@@ -220,6 +220,8 @@ function Mesh() {
 	 */
 	this.display = function(context, OFFSET_X, OFFSET_Y) {	
 		// display points
+        context.fillStyle = "#FF0000";
+        context.strokeStyle = "#FF0000";
 		for (var i in points) {
 			var size = points[i].zoom * 10;
 			context.fillRect(points[i].x-size/2 + OFFSET_X, points[i].y-size/2 + OFFSET_Y, size, size);	
