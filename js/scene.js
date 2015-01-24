@@ -10,7 +10,7 @@
  * 	@param 	_mesh		The mesh to consider
  *	@param	_bg			The background image to use
  */
-function Scene(_name, _desc, _cvs, _bg) {
+function Scene(_name, _desc, _cvs, _bg, _ambients) {
 	
 	// scene name
 	var name = _name;
@@ -59,6 +59,16 @@ function Scene(_name, _desc, _cvs, _bg) {
 	// id of the character played by the player
 	var playedCharacter = "";
 	
+    // ambient sounds
+    if (_ambients) {
+        var _this = this;
+        for (var i = 0; i < _ambients.length; i++) {
+            var ambient = _ambients[i];
+            game.audio.load(ambient.uri, function (buffer) {
+                _this.addAmbient(ambient.uri, buffer, ambient.volume);
+            });
+        }
+    }
 	/**
 	 * 	Adds a character to the scene
 	 */
@@ -96,7 +106,7 @@ function Scene(_name, _desc, _cvs, _bg) {
 	this.getBackgroundImage = function() { return _bg; }  
 
 
-    var darkness = 0;
+    var darkness = 1;
     this.setDarkness = function(d) {
            darkness = d;
     }
@@ -126,6 +136,10 @@ function Scene(_name, _desc, _cvs, _bg) {
 		};
 		imgBG.onerror = function() { console.log("Error while loading background: " + imgBG.src); };
 
+        for (var p in ambientSounds) { if (ambientSounds.hasOwnProperty(p)) {
+            game.audio.play(ambientSounds[p].buffer, ambientSounds[p].volume, true);
+        }}
+        
 		if (this.onEntry != null) {
 			this.onEntry();	
 		}	
@@ -458,6 +472,18 @@ function Scene(_name, _desc, _cvs, _bg) {
 		}	
 	}
 
+    /** audio stuff */
+    
+    var ambientSounds = {};
+    
+    this.addAmbient = function (key, buffer, volume) {
+        ambientSounds[key] = {buffer: buffer, volume: volume};
+    }
+    
+    this.removeAmbient = function (key) {
+        ambientSounds[key] = null;
+    }
+    
 }
 
 
