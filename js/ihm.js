@@ -162,6 +162,11 @@ clickInventory = function(i) {
 			obj.onUseInInventory();
 		}	
 	}
+    if (game.currentAction == game.USE_WITH) {
+        if (obj.onUseWithInInventory != null) {
+            obj.onUseWithInInventory();   
+        }
+    }
 }
 
 
@@ -290,7 +295,7 @@ function commentJouer() {
 	game.messagesToDisplay.push(new Message("Left-click to unroll all the possible actions:", COLOR_JORIS, -1, -1, -1));		
 	game.messagesToDisplay.push(new Message("1. \"Walk to\", represented by <img src='./images/cursor.png'>", COLOR_JORIS, -1, -1, -1));		
 	game.messagesToDisplay.push(new Message("2. \"Look at\", represented by <img src='./images/yeux.png'>", COLOR_JORIS, -1, -1, -1));		
-	game.messagesToDisplay.push(new Message("3. \"Use/Pick/Talk to\", symbolisés par <img src='./images/main.png'>", COLOR_JORIS, -1, -1, -1));		
+	game.messagesToDisplay.push(new Message("3. \"Use/Pick/Talk to\", represented by <img src='./images/main.png'>", COLOR_JORIS, -1, -1, -1));		
 	game.messagesToDisplay.push(new Message("4. \"Use (the selected object) with\", represented by an icon of the selected object.", COLOR_JORIS, -1, -1, -1));		
 	game.messagesToDisplay.push(new Message("Notice that this latter is only available if an object is selected in the inventory.", COLOR_JORIS, -1, -1, -1));		
 	game.messagesToDisplay.push(new Message("Once the action is chosen, left-click on the area on which the action should be executed.", COLOR_JORIS, -1, -1, -1));		
@@ -302,7 +307,7 @@ function commentJouer() {
 	game.messagesToDisplay.push(new Message("without having to wait the end of the sentence.", COLOR_JORIS, -1, -1, -1));	
 	game.messagesToDisplay.push(new Message("Give it a try.", COLOR_JORIS, -1, -1, 5000));	
 	game.messagesToDisplay.push(new Message("Useful, isn't it?", COLOR_JORIS, -1, -1, -1));	
-	game.messagesToDisplay.push(new Message("Let me give you a last piece of advice :", COLOR_JORIS, -1, -1, -1));
+	game.messagesToDisplay.push(new Message("Let me give you a last piece of advice:", COLOR_JORIS, -1, -1, -1));
 	game.messagesToDisplay.push(new Message("If you are stuck, don't hesistate to wipe the game area with your mouse.", COLOR_JORIS, -1, -1, -1));
 	game.messagesToDisplay.push(new Message("If there is an object you can interact with, it will be marked in the text line. ", COLOR_JORIS, -1, -1, -1));
 	game.messagesToDisplay.push(new Message("Don't worry, this game conforms the Lucas Arts&reg; philosophy on adventure games:", COLOR_JORIS, -1, -1, -1));
