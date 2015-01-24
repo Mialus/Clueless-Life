@@ -6,6 +6,7 @@ function Audio() {
     
     window.AudioContext = window.AudioContext || window.webkitAudioContext;
     var context = new AudioContext();
+    var currentLoop = null;
     
     /**
      * Load a sound buffer.
@@ -48,13 +49,13 @@ function Audio() {
         
         gainNode.connect(context.destination);
         gainNode.gain.value = volume;
-        
+
         source.buffer = buffer;
         source.playbackRate.value = playbackRate;
         
-        if (loop) {
+        if (loop && !loop.length) {
             gainNode.gain.linearRampToValueAtTime(0, currTime);
-            gainNode.gain.linearRampToValueAtTime(volume, currTime + 1);
+            gainNode.gain.linearRampToValueAtTime(volume, currTime + 0.5);
             //source.loop = true;
         }
         
@@ -62,18 +63,50 @@ function Audio() {
         source.start(0);
         
         if (loop) {
-            gainNode.gain.linearRampToValueAtTime(volume, currTime + duration-1);
-            gainNode.gain.linearRampToValueAtTime(0, currTime + duration);
-            var recurse = arguments.callee;
-            context.timer = setTimeout(function() {
-                recurse(buffer, volume, loop);
-            }, (duration - 1) * 1000);
+            
+            if (loop.length) {// array
+                
+                currentLoop = source;
+                
+                if (!this.currentLoop) {
+                    this.currentLoop = 0;
+                }
+                
+                this.currentLoop++;
+                if (this.currentLoop >= loop.length) {
+                    this.currentLoop = 0;
+                }
+                
+                var _this = this;
+                
+                source.timer = setTimeout(function() {
+                    source.timer = null;
+                    _this.play(loop[_this.currentLoop].buffer , loop[_this.currentLoop].volume, loop);
+                }, (duration + 2) * 1000);
+                
+            } else {
+
+                gainNode.gain.linearRampToValueAtTime(volume, currTime + duration-0.5);
+                gainNode.gain.linearRampToValueAtTime(0, currTime + duration);
+                var recurse = arguments.callee;
+                source.timer = setTimeout(function() {
+                    recurse(buffer, volume, loop);
+                }, (duration - 0.5) * 1000);
+                
+            }
         }
         
         return source;
     };
     
     this.stop = function (source) {
+        if (!source && currentLoop) {
+            source = currentLoop;
+        }
+        if (source.timer) {
+            clearTimeout(source.timer);
+            source.timer = null;
+        }
         source.stop(0);
     };
     

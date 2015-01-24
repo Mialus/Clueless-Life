@@ -48,6 +48,7 @@ function Character(imgSprite, arret, movement, callback, audioUri){
     this.playAudio = function() {
         if (audio && !isPlaying) {
             isPlaying = game.audio.play(audio, 1.0, false, 2.0);
+            isPlaying.addEventListener('ended', function () { isPlaying = null; });
         }
     }
     this.stopAudio = function () {
