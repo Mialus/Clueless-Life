@@ -60,14 +60,15 @@ function Scene(_name, _desc, _cvs, _bg, _ambients) {
 	var playedCharacter = "";
 	
     // ambient sounds
-    var _this = this;
-    for (var i = 0; i < _ambients.length; i++) {
-        var ambient = _ambients[i];
-        game.audio.load(ambient.uri, function (buffer) {
-            _this.addAmbient(ambient.uri, buffer, ambient.volume);
-        });
+    if (_ambients) {
+        var _this = this;
+        for (var i = 0; i < _ambients.length; i++) {
+            var ambient = _ambients[i];
+            game.audio.load(ambient.uri, function (buffer) {
+                _this.addAmbient(ambient.uri, buffer, ambient.volume);
+            });
+        }
     }
-    
 	/**
 	 * 	Adds a character to the scene
 	 */
