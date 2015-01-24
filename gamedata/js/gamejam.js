@@ -81,7 +81,8 @@ initGame = function(canvas) {
 initGameChap3 = function(canvas) {
 
 	// --- Scene Chambre ---- //
-	var ch3chambre = new Scene("ch3-chambre", "la chambre de bébé", canvas, "gamedata/images/chambreEnfant_NB2.jpg");
+
+	var ch3chambre = new Scene("ch3-chambre", "la chambre de bébé", canvas, "gamedata/images/chambreEnfant_NB2.jpg", [{uri: "gamedata/sounds/atmo-thunder-rain.mp3", volume: 0.05}]);
 	ch3chambre.addCharacter("perso", new CharacterDisplay("perso", perso, meshChambre(), new Point(70, 460, 1.2)), true);
     game.addScene(ch3chambre);
 
