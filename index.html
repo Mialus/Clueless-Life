@@ -1,0 +1,112 @@
+<!doctype html>
+<html>
+
+<head>
+	<meta charset="UTF-8">
+	<meta name="title" content="Day of the Cancoillotte">
+	<meta name="description" content="Un jeu d'aventure Point&Click développé durant la Game Cancoillotte 2014 (et un peu après)">
+	<link rel="image_src" href="http://members.femto-st.fr/sites/femto-st.fr.frederic-dadeau/files/content/GameJam2014/gamedata/images/DotC-fb.jpg" />
+	<title>Game Jam 2014</title>
+	<style type="text/css">
+.bcInv {
+	float: left; 
+	width: 139px;
+	height: 66px;		
+	background: #FFFFFF;
+	border: solid 1px #000;
+	text-align: center;
+	padding-top: 20px;
+}	
+
+#bcText {
+	width: 600px;
+	color: white;
+	text-shadow: -2px 0 4px black, 0 2px 4px black, 2px 0 4px black, 0 -2px 4px black;	
+	font-size: 20px;
+	text-align:center;
+	font-family: verdana;	
+	position: absolute;	
+	padding: 10px 10px 0 10px;
+}
+
+#bcSplashScreen {
+	width: 1000px;
+	height: 64px;
+	margin: 10px auto;
+	padding-top: 500px;
+	background: #F0F0F0;
+	display: block;
+	background: url("./gamedata/images/titre.png") no-repeat top left;
+	cursor: url("./images/cursor.png") 0 0, auto;
+}
+
+#btnDemarrer {
+	width: 200px;
+	height: 24px;
+	padding-top: 3px;
+	margin: 0px auto;
+	background: #FFF;
+	color: #000;
+	text-align: center;
+	border: solid 2px #000;
+	border-radius: 10px;
+	font-family: verdana; 	
+}
+
+#btnDemarrer:hover {
+	background: #000;
+	color: #FFF;	
+}
+
+.chapterTitle {
+	text-align: center;
+	font-family: verdana;
+	font-size: 24px;
+	font-weight: bold;
+	width: 900px;
+	margin: 0px auto;	
+}
+
+
+#gamearea {
+	display: none;	
+}
+	</style>
+	
+	<script src="./js/mesh.js"></script>	
+	<script src="./js/item.js"></script>	
+	<script src="./js/character.js"></script>	
+	<script src="./gamedata/js/gamejam.js"></script>	
+	<script src="./js/game.js"></script>	
+	<script src="./js/ihm.js"></script>
+	<script src="./js/scene.js"></script>	
+</head>
+
+<body onload="init()">
+
+	<div id="bcSplashScreen">
+		<div id="btnDemarrer" onclick="clickDemarrer()">Commencer</div>
+	</div>
+
+	<div id="gamearea" style="cursor: url(images/cursor.png) 0 0, auto; width: 1004px; height: 564px; margin: 20px auto;">
+		<div id="bcText"></div>
+		<canvas id="cvs" width="1000" height="470" style="border: solid 2px #000;">
+		Votre navigateur ne supporte pas les canvas... Dommage.
+		</canvas>
+		<div id="bcActionLine" style="width: 900px; margin: 0px auto; height: 20px; text-align: center; font-family: verdana; font-size: 16px;">Aller vers</div>
+		<div id="bcInventory" style="float: left; bottom: 0px;" >
+			<div id="bcInv0" class="bcInv" onclick="clickInventory(0)" onmouseover="mouseOverInventory(0)" onmouseout="mouseOutInventory()"></div>
+			<div id="bcInv1" class="bcInv" onclick="clickInventory(1)" onmouseover="mouseOverInventory(1)" onmouseout="mouseOutInventory()"></div>
+			<div id="bcInv2" class="bcInv" onclick="clickInventory(2)" onmouseover="mouseOverInventory(2)" onmouseout="mouseOutInventory()"></div>
+			<div id="bcInv3" class="bcInv" onclick="clickInventory(3)" onmouseover="mouseOverInventory(3)" onmouseout="mouseOutInventory()"></div>
+			<div id="bcInv4" class="bcInv" onclick="clickInventory(4)" onmouseover="mouseOverInventory(4)" onmouseout="mouseOutInventory()"></div>
+			<div id="bcInv5" class="bcInv" onclick="clickInventory(5)" onmouseover="mouseOverInventory(5)" onmouseout="mouseOutInventory()"></div>
+			<div id="bcInv6" class="bcInv" onclick="clickInventory(6)" onmouseover="mouseOverInventory(6)" onmouseout="mouseOutInventory()"></div>
+		</div>
+	</div>
+
+	<div onclick="commentJouer()" style="position: fixed; top: 10px; right: 10px; width: 30px; height: 26px; border: solid 2px #582900; border-radius: 4px; background: yellow; color: #582900; padding-top: 4px; text-align: center; font-weight: bold; font-size: 24px; cursor: url(images/cursor.png) 0 0, auto;" title="Comment jouer">?</div>
+
+</body>
+
+</html>
