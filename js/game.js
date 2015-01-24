@@ -109,6 +109,9 @@ function Game() {
 	 *	@param scName 	String 	Name of the scene
 	 */
 	this.setCurrentScene = function(scName) {
+        if (currentScene) {
+            currentScene.stop();
+        }
 		currentScene = (this.getScene(scName) != null) ? this.getScene(scName) : currentScene;
 	} 
 	

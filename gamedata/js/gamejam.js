@@ -70,7 +70,7 @@ initGame = function(canvas) {
 	game = new Game();
     
     game.audio.load("gamedata/sounds/atmo-thunder-rain.mp3", function (buffer) {
-        game.audio.play(buffer, 0.1, true);
+        game.audio.play(buffer, 0.2, true);
         
     });
     perso.loadAudio();
@@ -88,11 +88,29 @@ initGameChap3 = function(canvas) {
 
 	// --- Scene Chambre ---- //
 
-	var ch3chambre = new Scene("ch3-chambre", "la chambre de bébé", canvas, "gamedata/images/chambreEnfant_couleur1.jpg");
+	var ch3chambre = new Scene("ch3-chambre", "la chambre de bébé", canvas, "gamedata/images/chambreEnfant_couleur1.jpg", 
+        [
+            {uri: "gamedata/sounds/cries-01.mp3", volume: 0.5},
+            {uri: "gamedata/sounds/cries-02.mp3", volume: 0.5},
+            {uri: "gamedata/sounds/cries-03.mp3", volume: 0.5},
+            {uri: "gamedata/sounds/cries-04.mp3", volume: 0.5},
+            {uri: "gamedata/sounds/babling-01.mp3", volume: 0.25},
+            {uri: "gamedata/sounds/cough-02.mp3", volume: 0.25},
+        ]
+    );
 	ch3chambre.addCharacter("perso", new CharacterDisplay("perso", perso, meshChambre(), new Point(70, 460, 1.2)), true);
     game.addScene(ch3chambre);
 
-    var ch3couloir = new Scene("ch3-couloir", "le couloir", canvas, "gamedata/images/couloir.jpg");
+    var ch3couloir = new Scene("ch3-couloir", "le couloir", canvas, "gamedata/images/couloir.jpg", 
+        [
+            {uri: "gamedata/sounds/far-cries-01.mp3", volume: 0.1},
+            {uri: "gamedata/sounds/far-cries-02.mp3", volume: 0.1},
+            {uri: "gamedata/sounds/far-cries-03.mp3", volume: 0.1},
+            {uri: "gamedata/sounds/far-cries-04.mp3", volume: 0.1},
+            {uri: "gamedata/sounds/far-cries-05.mp3", volume: 0.1},
+            {uri: "gamedata/sounds/far-scream-01.mp3", volume: 0.1},
+        ]
+    );
     ch3couloir.setDarkness(0.05);
     ch3couloir.addCharacter("perso", new CharacterDisplay("perso", perso, meshCouloir(), new Point(602, 476, 1.2)), true);
     game.addScene(ch3couloir);
