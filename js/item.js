@@ -16,7 +16,7 @@ function Item(_id, _desc, _spInScene, _x, _y, _spInInventory) {
 	this.getDescription = function() { return this.description; } 
 
 	// getter for the action word of the interactive area (can be overriden)
-	this.getActionWord = function() { return "Utiliser"; }
+	this.getActionWord = function() { return "Use"; }
 
 	// sprite of the object in the scene
 	this.spriteInScene = new Image();
@@ -92,7 +92,7 @@ function InteractiveArea(_id, _desc, _point, _radius, _audioUri) {
 	this.getDescription = function() { return this.description; } 
 
 	// getter for the action word of the interactive area (can be overriden)
-	this.getActionWord = function() { return "Utiliser"; }
+	this.getActionWord = function() { return "Use"; }
 
 	// id of the area
 	this.isVisible = function() { return true; }

@@ -318,7 +318,7 @@ function Scene(_name, _desc, _cvs, _bg, _ambients) {
 				if (game.currentAction == game.LOOK_AT) {
 					var act = (interactiveAreas[i].onLookAt != null) ?
 						new Action("lookat", interactiveAreas[i].onLookAt) :
-						new Action("say", new Message("Il n'y a rien à regarder.", COLOR_JORIS, -1, -1, -1)); 					
+						new Action("say", new Message("There is nothing to look at.", COLOR_JORIS, -1, -1, -1)); 					
 					return { "action" : act, 
 							 "destination" : dest,
 							 "orientation" : interactiveAreas[i].getOrientation() };	
@@ -326,7 +326,7 @@ function Scene(_name, _desc, _cvs, _bg, _ambients) {
 				if (game.currentAction == game.USE) {
 					var act = (interactiveAreas[i].onUse != null) ? 
 						new Action("use", interactiveAreas[i].onUse) :
-						new Action("say", new Message("Je ne peux pas utiliser cela.", COLOR_JORIS, -1, -1, -1)); 						
+						new Action("say", new Message("I can not use that.", COLOR_JORIS, -1, -1, -1)); 						
 					return { "action": act, 
 							 "destination" : dest,
 							 "orientation" : interactiveAreas[i].getOrientation() };					
@@ -334,7 +334,7 @@ function Scene(_name, _desc, _cvs, _bg, _ambients) {
 				if (game.currentAction == game.USE_WITH) {
 					var act = (interactiveAreas[i].onUseWith != null) ?
 						new Action("use_with", interactiveAreas[i].onUseWith) :
-						new Action("say", new Message("Non, ces deux-là ne vont pas ensemble.", COLOR_JORIS, -1, -1, -1)); 
+						new Action("say", new Message("No, these two don't fit together.", COLOR_JORIS, -1, -1, -1)); 
 					return { "action": act, 
 							 "destination" : dest,
 							 "orientation" : interactiveAreas[i].getOrientation() };					
@@ -357,7 +357,7 @@ function Scene(_name, _desc, _cvs, _bg, _ambients) {
 				if (game.currentAction == game.LOOK_AT) {
 					var act = (objects[i].onLookAtInScene != null) ? 
 								new Action("lookat", objects[i].onLookAtInScene) : 
-								new Action("say", new Message("Je ne peux pas voir cela.", COLOR_JORIS, -1, -1, -1)); 
+								new Action("say", new Message("I can not see that.", COLOR_JORIS, -1, -1, -1)); 
 					return { "action" : act, 
 							 "destination" : dest, 
 							 "orientation" : objects[i].getOrientation() };	
@@ -365,7 +365,7 @@ function Scene(_name, _desc, _cvs, _bg, _ambients) {
 				if (game.currentAction == game.USE) {
 					var act = (objects[i].onUseInScene != null) ? 
 						new Action("use", objects[i].onUseInScene) :  
-						new Action("say", new Message("Je ne peux pas utiliser cela.", COLOR_JORIS, -1, -1, -1)); 
+						new Action("say", new Message("I can't use that.", COLOR_JORIS, -1, -1, -1)); 
 					return { "action": act, 
 							 "destination" : dest,
 							 "orientation" : objects[i].getOrientation() };					
@@ -373,7 +373,7 @@ function Scene(_name, _desc, _cvs, _bg, _ambients) {
 				if (game.currentAction == game.USE_WITH) {
 					var act = (objects[i].onUseWithInScene != null) ? 
 						new Action("use_with", objects[i].onUseWithInScene) : 
-						new Action("say", new Message("Non, ces deux-là ne vont pas ensemble.", COLOR_JORIS, -1, -1, -1)); 
+						new Action("say", new Message("No, these two don't fit together.", COLOR_JORIS, -1, -1, -1)); 
 					return { "action": act, 
 							 "destination" : dest, 
 							 "orientation" : objects[i].getOrientation() };					

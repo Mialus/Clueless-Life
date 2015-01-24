@@ -280,34 +280,34 @@ function demarrerChapitre(i) {
 
 function commentJouer() {
 	if (splashScreenOn || game.messagesToDisplay.length > 0) {
-		alert("Attendez d'être dans le jeu pour lancer cette action.");
+		alert("Please wait to be in the game before launching this action.");
 		return;
 	}
 	game.removeAllMessages();
 	game.setCharacterOrientation("S");
 	game.getCurrentScene().redraw();
-	game.messagesToDisplay.push(new Message("Pour jouer, c'est simple.", COLOR_JORIS, -1, -1, -1));		
-	game.messagesToDisplay.push(new Message("Cliquer sur le bouton gauche fait défiler les actions possibles :", COLOR_JORIS, -1, -1, -1));		
-	game.messagesToDisplay.push(new Message("1. \"Aller vers\", symbolisée par <img src='./images/cursor.png'>", COLOR_JORIS, -1, -1, -1));		
-	game.messagesToDisplay.push(new Message("2. \"Regarder/Examiner\", symbolisés par <img src='./images/yeux.png'>", COLOR_JORIS, -1, -1, -1));		
-	game.messagesToDisplay.push(new Message("3. \"Utiliser/Prendre/Parler à\", symbolisés par <img src='./images/main.png'>", COLOR_JORIS, -1, -1, -1));		
-	game.messagesToDisplay.push(new Message("4. \"Utiliser (l'objet de l'inventaire sélectionné) avec\", symbolisé par une icône de l'objet sélectionné.", COLOR_JORIS, -1, -1, -1));		
-	game.messagesToDisplay.push(new Message("Notez que cette dernière action n'est disponible que si un objet de l'inventaire est sélectionné.", COLOR_JORIS, -1, -1, -1));		
-	game.messagesToDisplay.push(new Message("Une fois l'action choisie, on cliquera du bouton gauche sur la zone de jeu où on souhaite effectuer l'action.", COLOR_JORIS, -1, -1, -1));		
-	game.messagesToDisplay.push(new Message("Et moi, j'effectuerai cette action choisie.", COLOR_JORIS, -1, -1, -1));		
-	game.messagesToDisplay.push(new Message("Ces actions peuvent également s'appliquer aux objets de l'inventaire. ", COLOR_JORIS, -1, -1, -1));
-	game.messagesToDisplay.push(new Message("En cas de doute, la ligne de texte en bas de la scène de jeu vous permettra de visualiser l'action en cours et l'objet sur laquelle on l'applique.", COLOR_JORIS, -1, -1, -1));		
-	game.messagesToDisplay.push(new Message("Quand je suis en train de parler, comme là maintenant,", COLOR_JORIS, -1, -1, -1));		
-	game.messagesToDisplay.push(new Message("vous pouvez passer au dialogue suivant, en cliquant du bouton gauche,", COLOR_JORIS, -1, -1, -1));	
-	game.messagesToDisplay.push(new Message("sans attendre que j'aie fini.", COLOR_JORIS, -1, -1, -1));	
-	game.messagesToDisplay.push(new Message("Allez-y essayez.", COLOR_JORIS, -1, -1, 5000));	
-	game.messagesToDisplay.push(new Message("Pratique hein ?", COLOR_JORIS, -1, -1, -1));	
-	game.messagesToDisplay.push(new Message("Allez, je vous donne un dernier conseil :", COLOR_JORIS, -1, -1, -1));
-	game.messagesToDisplay.push(new Message("Si vous êtes bloqué(e), n'hésitez pas à balayer la zone de jeu avec la souris.", COLOR_JORIS, -1, -1, -1));
-	game.messagesToDisplay.push(new Message("Si vous rencontrez un objet avec lequel vous pouvez interagir, il sera signalé dans la ligne de texte. ", COLOR_JORIS, -1, -1, -1));
-	game.messagesToDisplay.push(new Message("N'ayez crainte, ce jeu respecte la philosophie des jeux d'aventure proposée par LucasArts &reg;", COLOR_JORIS, -1, -1, -1));
-	game.messagesToDisplay.push(new Message("il est impossible d'être bloqué, ou de mourir, et toutes les actions que vous pourrez effecter sont prévues.", COLOR_JORIS, -1, -1, -1));
-	game.messagesToDisplay.push(new Message("Amusez-vous bien :-)", COLOR_JORIS, -1, -1, -1));
+	game.messagesToDisplay.push(new Message("This game is very simple to play.", COLOR_JORIS, -1, -1, -1));		
+	game.messagesToDisplay.push(new Message("Left-click to unroll all the possible actions:", COLOR_JORIS, -1, -1, -1));		
+	game.messagesToDisplay.push(new Message("1. \"Walk to\", represented by <img src='./images/cursor.png'>", COLOR_JORIS, -1, -1, -1));		
+	game.messagesToDisplay.push(new Message("2. \"Look at\", represented by <img src='./images/yeux.png'>", COLOR_JORIS, -1, -1, -1));		
+	game.messagesToDisplay.push(new Message("3. \"Use/Pick/Talk to\", symbolisés par <img src='./images/main.png'>", COLOR_JORIS, -1, -1, -1));		
+	game.messagesToDisplay.push(new Message("4. \"Use (the selected object) with\", represented by an icon of the selected object.", COLOR_JORIS, -1, -1, -1));		
+	game.messagesToDisplay.push(new Message("Notice that this latter is only available if an object is selected in the inventory.", COLOR_JORIS, -1, -1, -1));		
+	game.messagesToDisplay.push(new Message("Once the action is chosen, left-click on the area on which the action should be executed.", COLOR_JORIS, -1, -1, -1));		
+	game.messagesToDisplay.push(new Message("And, I'll do that.", COLOR_JORIS, -1, -1, -1));		
+	game.messagesToDisplay.push(new Message("These actions can also apply to the objects in the inventory. ", COLOR_JORIS, -1, -1, -1));
+	game.messagesToDisplay.push(new Message("The text line (below the scene) will help you to visualize the current action and the object on which it applies.", COLOR_JORIS, -1, -1, -1));		
+	game.messagesToDisplay.push(new Message("When I'm talking, like now,", COLOR_JORIS, -1, -1, -1));		
+	game.messagesToDisplay.push(new Message("you can move on to the next sentence, by a left-click,", COLOR_JORIS, -1, -1, -1));	
+	game.messagesToDisplay.push(new Message("without having to wait the end of the sentence.", COLOR_JORIS, -1, -1, -1));	
+	game.messagesToDisplay.push(new Message("Give it a try.", COLOR_JORIS, -1, -1, 5000));	
+	game.messagesToDisplay.push(new Message("Useful, isn't it?", COLOR_JORIS, -1, -1, -1));	
+	game.messagesToDisplay.push(new Message("Let me give you a last piece of advice :", COLOR_JORIS, -1, -1, -1));
+	game.messagesToDisplay.push(new Message("If you are stuck, don't hesistate to wipe the game area with your mouse.", COLOR_JORIS, -1, -1, -1));
+	game.messagesToDisplay.push(new Message("If there is an object you can interact with, it will be marked in the text line. ", COLOR_JORIS, -1, -1, -1));
+	game.messagesToDisplay.push(new Message("Don't worry, this game conforms the Lucas Arts&reg; philosophy on adventure games:", COLOR_JORIS, -1, -1, -1));
+	game.messagesToDisplay.push(new Message("it is not possible to be stuck, or to die, and all the possible actions that you can do have been planned by the game developers.", COLOR_JORIS, -1, -1, -1));
+	game.messagesToDisplay.push(new Message("Have fun :-)", COLOR_JORIS, -1, -1, -1));
 	game.displayMessages();
 }
 
