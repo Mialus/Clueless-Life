@@ -33,7 +33,7 @@ movement["NW"] = new Animation(imgPerso, 290, 111, 1407, 0, 12, 111, 0, 0, 1);
 movement["NE"] = new Animation(imgPerso, 290, 111, 1407, 0, 12, 111, 0, 1, 1);
 
 
-var perso = new Character(imgPerso, arret, movement, null);
+var perso = new Character(imgPerso, arret, movement, null, "gamedata/sounds/footstep-marble.mp3");
 
 
 var chapters = [ 
@@ -68,7 +68,13 @@ initGame = function(canvas) {
 	
 	// game
 	game = new Game();
-	
+    
+    game.audio.load("gamedata/sounds/atmo-thunder-rain.mp3", function (buffer) {
+        game.audio.play(buffer, 0.1, true);
+        
+    });
+    perso.loadAudio();
+    
 	initGameChap3(canvas);
 	
 	return game;
@@ -82,7 +88,7 @@ initGameChap3 = function(canvas) {
 
 	// --- Scene Chambre ---- //
 
-	var ch3chambre = new Scene("ch3-chambre", "la chambre de bébé", canvas, "gamedata/images/chambreEnfant_NB2.jpg", [{uri: "gamedata/sounds/atmo-thunder-rain.mp3", volume: 0.05}]);
+	var ch3chambre = new Scene("ch3-chambre", "la chambre de bébé", canvas, "gamedata/images/chambreEnfant_NB2.jpg");
 	ch3chambre.addCharacter("perso", new CharacterDisplay("perso", perso, meshChambre(), new Point(70, 460, 1.2)), true);
     game.addScene(ch3chambre);
 
@@ -95,7 +101,7 @@ initGameChap3 = function(canvas) {
 	sePoutre.getZIndex = function() { return 8; };
 	ch3couloir.addSceneElement(sePoutre);
 	
-    var iaInterrupteur = new InteractiveArea("iaInterrupteur", "l'interrupteur", new Point(620, 230), 8);
+    var iaInterrupteur = new InteractiveArea("iaInterrupteur", "l'interrupteur", new Point(620, 230), 8, "gamedata/sounds/switch.mp3");
     iaInterrupteur.getClosestPoint = function() { 
         return new Point(583, 411);
     }
@@ -116,6 +122,7 @@ initGameChap3 = function(canvas) {
         game.getCurrentScene().setDarkness(newDarkness);  
         game.getCurrentScene().redraw();
         game.setVariableValue("couloirAllume", 1 - game.getVariableValue("couloirAllume"));   
+        iaInterrupteur.playAudio();
     }
     ch3couloir.addInteractiveArea(iaInterrupteur);
         
