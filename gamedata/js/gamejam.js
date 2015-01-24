@@ -94,10 +94,11 @@ initGameChap3 = function(canvas) {
             {uri: "gamedata/sounds/cries-02.mp3", volume: 0.5},
             {uri: "gamedata/sounds/cries-03.mp3", volume: 0.5},
             {uri: "gamedata/sounds/cries-04.mp3", volume: 0.5},
-            {uri: "gamedata/sounds/babling-01.mp3", volume: 0.25},
-            {uri: "gamedata/sounds/cough-02.mp3", volume: 0.25},
+            //{uri: "gamedata/sounds/babling-01.mp3", volume: 0.25},
+            //{uri: "gamedata/sounds/cough-02.mp3", volume: 0.25},
         ]
     );
+    
 	ch3chambre.addCharacter("perso", new CharacterDisplay("perso", perso, meshChambre(), new Point(70, 460, 1.2)), true);
     game.addScene(ch3chambre);
 
@@ -152,21 +153,28 @@ initGameChap3 = function(canvas) {
     /**** CHAMBRE DE BEBE ***/
     
     // -- paquet de couches -- //  
-    var iaPaquetCouches = new InteractiveArea("iaPaquetCouches", "the diapers", new Point(880, 277), 10);
+    var iaPaquetCouches = new InteractiveArea("iaPaquetCouches", "the diapers", new Point(880, 277), 10, "gamedata/sounds/take-diaper.mp3");
     iaPaquetCouches.onLookAt = function() {
 		game.removeAllMessages();
 		game.messagesToDisplay.push(new Message("This a pile of diapers.", COLOR_PERSO, -1, -1, -1));
 		game.displayMessages();           
     }
     iaPaquetCouches.getActionWord = function() { return "Pick"; }
+    iaPaquetCouches.isOnUse = false;
     iaPaquetCouches.onUse = function() {
+        if (iaPaquetCouches.isOnUse) return;
+        
+        iaPaquetCouches.isOnUse = true;
+        
         if (game.getInventory().containsItem("couchePropre")) {
             game.removeAllMessages();
 		    game.messagesToDisplay.push(new Message("I already have one.", COLOR_PERSO, -1, -1, -1));
-		    game.displayMessages();           
+		    game.displayMessages();    
+            iaPaquetCouches.isOnUse = false;
             return;
         }
-        game.addItemToInventory("couchePropre");            
+        //game.addItemToInventory("couchePropre");    
+        iaPaquetCouches.playAudio(function () {game.addItemToInventory("couchePropre"); iaPaquetCouches.isOnUse = false;});
     }
     ch3chambre.addInteractiveArea(iaPaquetCouches);
 
@@ -211,12 +219,32 @@ initGameChap3 = function(canvas) {
     iaBebeALanger.onUseWithInScene = function(o)  {
         if ((game.getSelectedObject().id == "lingette" || game.getSelectedObject().id == "couchePropre") && 
                 game.getInventory().containsItem("couchePropre") && game.getInventory().containsItem("lingette")) {
+            
             game.removeItemFromInventory("couchePropre");
             game.removeItemFromInventory("lingette");
-            game.addItemToInventory("coucheSale");
-            game.removeAllMessages();
-            game.messagesToDisplay.push(new Message("You should feel better now.", COLOR_JORIS, -1, -1, -1));	
-            game.displayMessages();
+            
+            game.audio.load("gamedata/sounds/clean-bottom-back-02.mp3", function (buffer) {
+                source = game.audio.play(buffer);
+                source.addEventListener("ended", function () {
+                    
+                    game.audio.load("gamedata/sounds/diaper-scratch-1.mp3", function (buffer) {
+                        source = game.audio.play(buffer);
+                        source.addEventListener("ended", function () {
+                            game.audio.load("gamedata/sounds/diaper-scratch-2.mp3", function (buffer) {
+                                game.audio.play(buffer);
+                            });
+                        });
+                    });
+                    
+                    game.addItemToInventory("coucheSale");
+                    game.removeAllMessages();
+                    
+                    game.messagesToDisplay.push(new Message("You should feel better now.", COLOR_JORIS, -1, -1, -1));	
+                    game.displayMessages();
+                });
+            });
+            
+            
             return;
         }
         game.removeAllMessages();
@@ -244,9 +272,24 @@ initGameChap3 = function(canvas) {
         game.displayMessages();
     }
     iaBebeBerceau.getActionWord = function() { return "Pick"; }
+    
+    var babyIsBabling = false;
+    
     iaBebeBerceau.onUse = function() {
         game.addItemToInventory("bebe");
         game.setVariableValue("bebePris", 1);
+        
+        //TODO stop cry start babyIsBabling
+        game.getCurrentScene().stop();
+        //{uri: "gamedata/sounds/babling-01.mp3", volume: 0.25}
+        game.audio.load("gamedata/sounds/babling-01.mp3", function (buffer) {
+            bable = function () {
+                babyIsBabling = game.audio.play(buffer, 0.25);
+                babyIsBabling.addEventListener("ended", bable);
+            };
+            bable();
+        });
+        
     }
     ch3chambre.addInteractiveArea(iaBebeBerceau);
 
@@ -265,6 +308,14 @@ initGameChap3 = function(canvas) {
         if (game.getSelectedObject().id == "bebe") {
             game.removeItemFromInventory("bebe");
             game.setVariableValue("bebePris", 0);
+            
+            //TODO stop babyIsBabling start crying if crying baby
+            game.audio.stop(babyIsBabling);
+            babyIsBabling = false;
+            if (game.getVariableValue("bebePleure") == 1) {
+                game.getCurrentScene().startAudio();
+            }
+            
             return;
         }        
         game.removeAllMessages();
@@ -318,26 +369,34 @@ initGameChap3 = function(canvas) {
 	}
     game.allObjects["lingette"] = lingette;
 
-    var iaLingettes = new InteractiveArea("iaLingettes", "the baby-wipers", new Point(837, 266), 20);
+    var iaLingettes = new InteractiveArea("iaLingettes", "the baby-wipers", new Point(837, 266), 20, "gamedata/sounds/take-wipe.mp3");
     iaLingettes.onLookAt = function() {
 		game.removeAllMessages();
 		game.messagesToDisplay.push(new Message("This a pack of baby-wipers.", COLOR_PERSO, -1, -1, -1));
 		game.displayMessages();           
     }
     iaLingettes.getActionWord = function() { return "Pick"; }
+    iaLingettes.isOnUse = false
     iaLingettes.onUse = function() {
+        
+        if (iaLingettes.isOnUse) return;
+        
+        iaLingettes.isOnUse = true;
+        
         if (game.getInventory().containsItem("lingette")) {
             game.removeAllMessages();
 		    game.messagesToDisplay.push(new Message("I already have one.", COLOR_PERSO, -1, -1, -1));
-		    game.displayMessages();           
+		    game.displayMessages();   
+            iaLingettes.isOnUse = false
             return;
         }
-        game.addItemToInventory("lingette");            
+        //game.addItemToInventory("lingette");            
+        iaLingettes.playAudio(function () {game.addItemToInventory("lingette"); iaLingettes.isOnUse = false;});
     }
     ch3chambre.addInteractiveArea(iaLingettes);
     
     // poubelle
-    var iaPoubelle = new InteractiveArea("iaPoubelle", "the bin", new Point(960, 387), 50);
+    var iaPoubelle = new InteractiveArea("iaPoubelle", "the bin", new Point(960, 387), 50, "gamedata/sounds/throw-away-diaper.mp3");
     iaPoubelle.onLookAt = function() {
         game.removeAllMessages();
         game.messagesToDisplay.push(new Message("Smells like teen spirit.", COLOR_PERSO, -1, -1, -1));
@@ -355,7 +414,13 @@ initGameChap3 = function(canvas) {
             game.removeItemFromInventory("coucheSale");
             game.removeAllMessages();
             game.messagesToDisplay.push(new Message("Farewell dirty diaper.", COLOR_PERSO, -1, -1, -1));
-            game.displayMessages();           
+            game.displayMessages();   
+            
+            iaPoubelle.playAudio(function () {
+                game.audio.load("gamedata/sounds/close-bin.mp3", function (buffer) {
+                    game.audio.play(buffer);
+                });
+            });
         }
     }
     ch3chambre.addInteractiveArea(iaPoubelle);

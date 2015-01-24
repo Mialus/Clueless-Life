@@ -127,9 +127,12 @@ function InteractiveArea(_id, _desc, _point, _radius, _audioUri) {
 	// function to execute when the object is looked in the scene
 	this.onLookAt = null;
 		
-    this.playAudio = function () {
+    this.playAudio = function (callback) {
         if (this.audioBuffer) {
-            game.audio.play(this.audioBuffer);
+            source = game.audio.play(this.audioBuffer);
+            if (callback) {
+                source.onended = callback;
+            }
         }
     };
     

@@ -138,11 +138,7 @@ function Scene(_name, _desc, _cvs, _bg, _ambients) {
 		};
 		imgBG.onerror = function() { console.log("Error while loading background: " + imgBG.src); };
 
-        //for (var p in ambientSounds) { if (ambientSounds.hasOwnProperty(p)) {
-        if (ambientSounds && ambientSounds.length > 0) {
-            game.audio.play(ambientSounds[0].buffer, ambientSounds[0].volume, ambientSounds);
-        }
-        //}}
+        this.startAudio();
         
 		if (this.onEntry != null) {
 			this.onEntry();	
@@ -492,6 +488,14 @@ function Scene(_name, _desc, _cvs, _bg, _ambients) {
     
     this.stop = function () {
         game.audio.stop();
+    }
+    
+    this.startAudio = function () {
+    
+        if (ambientSounds && ambientSounds.length > 0) {
+            game.audio.play(ambientSounds[0].buffer, ambientSounds[0].volume, ambientSounds);
+        }
+    
     }
 }
 
