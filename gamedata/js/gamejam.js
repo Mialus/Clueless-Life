@@ -86,8 +86,8 @@ initGame = function(canvas) {
  *************************************************************************/
 initGameChap3 = function(canvas) {
 
+    
 	// --- Scene Chambre ---- //
-
 	var ch3chambre = new Scene("ch3-chambre", "the baby's bedroom", canvas, "gamedata/images/chambreEnfant_couleur1.jpg", 
         [
             {uri: "gamedata/sounds/cries-01.mp3", volume: 0.5},
@@ -115,12 +115,19 @@ initGameChap3 = function(canvas) {
     ch3couloir.setDarkness(0.05);
     ch3couloir.addCharacter("perso", new CharacterDisplay("perso", perso, meshCouloir(), new Point(602, 476, 1.2)), true);
     game.addScene(ch3couloir);
+    
+    // -- Scene Cuisine --//
+    var ch3cuisine = new Scene("ch3-cuisine", "the kitchen", canvas, "./gamedata/images/cuisine.jpg");
+	ch3cuisine.addCharacter("perso", new CharacterDisplay("perso", perso, meshCuisine(), new Point(982, 580, 1.3)), true);
+    game.addScene(ch3cuisine);
+    
 
     // -- poutre (à faire disparaitre pour la version finale -- //
     var sePoutre = new SceneElement("./gamedata/images/poutre.png", 396, 115);
 	sePoutre.getZIndex = function() { return 8; };
 	ch3couloir.addSceneElement(sePoutre);
 	
+
     // -- Interrupteur du couloir -- //
     var iaInterrupteur = new InteractiveArea("iaInterrupteur", "the switch", new Point(620, 230), 8, "gamedata/sounds/switch.mp3");
     iaInterrupteur.getClosestPoint = function() { 
@@ -202,7 +209,7 @@ initGameChap3 = function(canvas) {
 		game.messagesToDisplay.push(new Message("I must change his diaper.", COLOR_JORIS, -1, -1, -1));	
 		game.displayMessages();
     }
-    iaBebeALanger.getActionWord = function() { return "Pick;" }
+    iaBebeALanger.getActionWord = function() { return "Pick"; }
     iaBebeALanger.onUseInScene = function() {
         game.setVariableValue("bebePris", 1);
         game.setVariableValue("bebeSurTable", 0);
@@ -356,29 +363,210 @@ initGameChap3 = function(canvas) {
             game.removeAllMessages();
             game.messagesToDisplay.push(new Message("Farewell dirty diaper.", COLOR_PERSO, -1, -1, -1));
             game.displayMessages();           
+            game.setVariableValue("bebeChange", 1);
         }
     }
     ch3chambre.addInteractiveArea(iaPoubelle);
     
-    // passages
-    var paCouloirChambre = new Passage(501, 205, ch3chambre, new Point(70, 460, 1.2));
-    paCouloirChambre.isVisible = function() {
-        return game.getVariableValue("couloirAllume") == 1;   
+    
+    // biberon 
+    var biberon = new Item("biberon", "baby's bottle", "./gamedata/images/biberonInScene.png", 182, 156, "./gamedata/images/biberonInInventory.png");
+    biberon.getOrientation = function() { return "NW"; }
+    biberon.onLookAtInScene = function() {
+        game.removeAllMessages();
+        game.messagesToDisplay.push(new Message("We use this bottle to feed our baby.", COLOR_PERSO, -1, -1, -1));
+        game.displayMessages();           
     }
+    biberon.onLookAtInInventory = function() {
+        if (game.getVariableValue("laitChaud") == 1) {
+            game.removeAllMessages();
+            game.messagesToDisplay.push(new Message("The milk is ready.", COLOR_PERSO, -1, -1, -1));
+            game.displayMessages();           
+            return;
+        }
+        if (game.getVariableValue("laitOK") == 1) {
+            game.removeAllMessages();
+            game.messagesToDisplay.push(new Message("I still need to warm it.", COLOR_PERSO, -1, -1, -1));
+            game.displayMessages();           
+            return;
+        }
+        if (game.getVariableValue("poudreOK") == 1) {
+            game.removeAllMessages();
+            game.messagesToDisplay.push(new Message("There is powder in it.", COLOR_PERSO, -1, -1, -1));
+            game.messagesToDisplay.push(new Message("I should add water to get milk.", COLOR_PERSO, -1, -1, -1));
+            game.displayMessages();           
+            return;
+        }
+        game.removeAllMessages();
+        game.messagesToDisplay.push(new Message("It is empty.", COLOR_PERSO, -1, -1, -1));
+        game.displayMessages();           
+    }
+    biberon.onUseInScene = function() {
+        game.addItemToInventory("biberon");           
+    }
+    biberon.onUseWithInInventory = function() {
+        if (game.getSelectedObject().id != "bouteilleEau") {
+            game.removeAllMessages();
+            game.messagesToDisplay.push(new Message("No way.", COLOR_PERSO, -1, -1, -1));
+            game.displayMessages();          
+            return;
+        }
+        
+        if (game.getVariableValue("laitOK") == 1) {
+            game.removeAllMessages();
+            game.messagesToDisplay.push(new Message("The milk is already ready, Eddy.", COLOR_PERSO, -1, -1, -1));
+            game.displayMessages();          
+            return;
+        }
+            
+        if (game.getVariableValue("poudreOK") == 1) {
+            game.setVariableValue("laitOK", 1);
+            game.removeAllMessages();
+            game.messagesToDisplay.push(new Message("The milk is ready. I now need to warm it.", COLOR_PERSO, -1, -1, -1));
+            game.displayMessages(); 
+            return;
+        }
+        game.removeAllMessages();
+        game.messagesToDisplay.push(new Message("I should first put some milk powder in it.", COLOR_PERSO, -1, -1, -1));
+        game.displayMessages();           
+        
+    }
+    game.allObjects["biberon"] = biberon;
+    ch3chambre.addObject(biberon);
+ 
+    
+    /*****   CUISINE     *****/
+        
+    // eau 
+    var bouteilleEau = new Item("bouteilleEau", "bottle of water", "./gamedata/images/bouteilleEau.png", 792, 270, "./gamedata/images/bouteilleEau.png");
+    bouteilleEau.onLookAtInScene = bouteilleEau.onLookAtInInventory = function() {
+        game.removeAllMessages();
+        game.messagesToDisplay.push(new Message("This water is good for the babies.", COLOR_PERSO, -1, -1, -1));
+        game.displayMessages();           
+    }
+    bouteilleEau.getActionWord = function() { return "Pick"; }
+    bouteilleEau.onUseInScene = function() {
+        game.addItemToInventory("bouteilleEau");   
+    }
+    game.allObjects["bouteilleEau"] = bouteilleEau;
+    ch3cuisine.addObject(bouteilleEau);
+    
+    
+    // poudre 
+    var poudreLait = new Item("poudreLait", "milk powder", "./gamedata/images/poudre.png", 392, 275, "./gamedata/images/poudre.png");
+    poudreLait.onLookAtInScene = function() {
+        game.removeAllMessages();
+        game.messagesToDisplay.push(new Message("This can be used to produce milk for the baby.", COLOR_PERSO, -1, -1, -1));
+        game.displayMessages();           
+    }
+    poudreLait.onUseWithInScene = function() {
+        if (game.getSelectedObject().id != "biberon") {
+            game.removeAllMessages();
+            game.messagesToDisplay.push(new Message("No. It won't work.", COLOR_PERSO, -1, -1, -1));
+            game.displayMessages();           
+            return;
+        }
+        game.setVariableValue("poudreOK", 1);
+        game.removeAllMessages();
+        game.messagesToDisplay.push(new Message("OK. Done.", COLOR_PERSO, -1, -1, -1));
+        game.displayMessages();           
+    }
+    game.allObjects["poudreLait"] = poudreLait;
+    ch3cuisine.addObject(poudreLait);
+    
+    // micro-ondes
+    var iaMicroOndes = new InteractiveArea("iaMicroOndes", "the microwave", new Point(592, 361), 20);
+    iaMicroOndes.getOrientation = function() { return "N"; }
+    iaMicroOndes.onLookAtInScene = function() {
+        game.removeAllMessages();
+        game.messagesToDisplay.push(new Message("I don't really know how it works, but it works.", COLOR_PERSO, -1, -1, -1));
+        game.displayMessages();           
+    }
+    iaMicroOndes.onUseWith = function() {
+        if (game.getSelectedObject().id == "bebe") {
+            game.setCharacterOrientation("S");
+            game.removeAllMessages();
+            game.messagesToDisplay.push(new Message("ARE YOU OUT OF YOUR MIND?!?", COLOR_PERSO, -1, -1, -1));
+            game.messagesToDisplay.push(new Message("WHAT IS WRONG WITH YOU?!?", COLOR_PERSO, -1, -1, -1));
+            game.messagesToDisplay.push(new Message("HOW CAN YOU POSSIBLY IMAGINE TO DO THAT?!?", COLOR_PERSO, -1, -1, -1));
+            game.displayMessages();           
+            return;
+        }
+        if (game.getSelectedObject().id != "biberon") {
+            game.removeAllMessages();
+            game.messagesToDisplay.push(new Message("I don't want to microwave that.", COLOR_PERSO, -1, -1, -1));
+            game.messagesToDisplay.push(new Message("It could be dangerous.", COLOR_PERSO, -1, -1, -1));
+            game.displayMessages();           
+            return;
+        }
+        game.setVariableValue("laitChaud", 1);
+        game.removeAllMessages();
+        game.messagesToDisplay.push(new Message("The milk is now warm.", COLOR_PERSO, -1, -1, -1));
+        game.displayMessages();           
+    }
+    ch3cuisine.addInteractiveArea(iaMicroOndes);
+    
+    // robinet
+    var iaRobinet = new InteractiveArea("iaRobinet", "the tap", new Point(313, 280), 20);
+    iaRobinet.onLookAtInScene = function() {
+        game.removeAllMessages();
+        game.messagesToDisplay.push(new Message("This is a source of water.", COLOR_PERSO, -1, -1, -1));
+        game.displayMessages();           
+    }
+    iaRobinet.onUseWith = function() {
+        if (game.getSelectedObject().id == "biberon" && game.getVariableValue("poudreOK") == 1) {
+            game.removeAllMessages();
+            game.messagesToDisplay.push(new Message("Tap water is not good for babies.", COLOR_PERSO, -1, -1, -1));
+            game.displayMessages();           
+            return;
+        }   
+        game.removeAllMessages();
+        game.messagesToDisplay.push(new Message("No.", COLOR_PERSO, -1, -1, -1));
+        game.displayMessages();           
+    }
+    ch3cuisine.addInteractiveArea(iaRobinet);
+    
+    
+    /*** passages ***/
+    var paCouloirChambre = new Passage(501, 205, ch3chambre, new Point(70, 460, 1.2));
+    paCouloirChambre.isVisible = function() { return game.getVariableValue("couloirAllume") == 1; }
     ch3couloir.addPassage(paCouloirChambre);
     
     var paChambreCouloir = new Passage(46, 461, ch3couloir, new Point(472, 292, 0.5));
     ch3chambre.addPassage(paChambreCouloir);
     
-    // variables
+    var paCuisineCouloir = new Passage(970, 575, ch3couloir, new Point(602, 476, 1.2));
+    ch3cuisine.addPassage(paCuisineCouloir);
+    
+    var paCouloirCuisine = new Passage(602, 476, ch3cuisine, new Point(970, 575, 1.3));
+    paCouloirCuisine.isVisible = function() { return game.getVariableValue("couloirAllume") == 1; }
+    ch3couloir.addPassage(paCouloirCuisine);
+    
+    /*** variables ***/
     game.setVariableValue("couloirAllume", 0);
     game.setVariableValue("bebePris", 0);
     game.setVariableValue("bebePleure", 1);
     game.setVariableValue("bebeSurTable", 0);
+    game.setVariableValue("bebeChange", 0);
+    game.setVariableValue("poudreOK", 0);
+    game.setVariableValue("laitOK", 0);
+    game.setVariableValue("laitChaud", 0);
    
 }
 
 
+
+meshCuisine = function() {
+ 
+    var m = new Mesh();
+    
+    var pDroite = new Point(982, 580, 1.3);
+    var pGauche = new Point(576, 496, 1.3);
+    
+    m.addSegment(new Segment(pDroite, pGauche, 0.8));
+    
+    return m;
+}
 
 meshCouloir = function() {
  
@@ -424,10 +612,7 @@ meshChambre = function() { // TODO check
     m.addSegment(new Segment(pTableLanger, pBerceau, 0.9));
     m.addSegment(new Segment(pTableLanger, pDroite, 0.9));
     
-    
-    
-    
-	return m;
+    return m;
 }
 
 
