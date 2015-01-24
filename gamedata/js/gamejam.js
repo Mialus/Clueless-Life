@@ -82,12 +82,12 @@ initGameChap3 = function(canvas) {
 
 	// --- Scene Chambre ---- //
 
-	var ch3chambre = new Scene("ch3-chambre", "la chambre de bébé", canvas, "gamedata/images/chambreEnfant_NB2.jpg", [{uri: "gamedata/sounds/atmo-thunder-rain.mp3", volume: 0.05}]);
+	var ch3chambre = new Scene("ch3-chambre", "la chambre de bébé", canvas, "gamedata/images/chambreEnfant_couleur1.jpg", [{uri: "gamedata/sounds/atmo-thunder-rain.mp3", volume: 0.05}]);
 	ch3chambre.addCharacter("perso", new CharacterDisplay("perso", perso, meshChambre(), new Point(70, 460, 1.2)), true);
     game.addScene(ch3chambre);
 
     var ch3couloir = new Scene("ch3-couloir", "le couloir", canvas, "gamedata/images/couloir.jpg");
-    ch3couloir.setDarkness(0.1);
+    ch3couloir.setDarkness(0.05);
     ch3couloir.addCharacter("perso", new CharacterDisplay("perso", perso, meshCouloir(), new Point(602, 476, 1.2)), true);
     game.addScene(ch3couloir);
     
@@ -112,7 +112,7 @@ initGameChap3 = function(canvas) {
         return game.getVariableValue("couloirAllume") == 1 ? "l'interrupteur" : "le truc en plastique sur le mur";   
     }
     iaInterrupteur.onUse = function() {
-        var newDarkness = (game.getVariableValue("couloirAllume") == 1) ? 0 : 1;
+        var newDarkness = (game.getVariableValue("couloirAllume") == 1) ? 0.05 : 1;
         game.getCurrentScene().setDarkness(newDarkness);  
         game.getCurrentScene().redraw();
         game.setVariableValue("couloirAllume", 1 - game.getVariableValue("couloirAllume"));   
@@ -121,13 +121,16 @@ initGameChap3 = function(canvas) {
         
     // passages
     var paCouloirChambre = new Passage(501, 205, ch3chambre, new Point(70, 460, 1.2));
+    paCouloirChambre.isVisible = function() {
+        return game.getVariableValue("couloirAllume") == 1;   
+    }
     ch3couloir.addPassage(paCouloirChambre);
     
-    var paChambreCouloir = new Passage(46, 461, ch3couloir, new Point(602, 476, 1.2));
+    var paChambreCouloir = new Passage(46, 461, ch3couloir, new Point(472, 292, 0.5));
     ch3chambre.addPassage(paChambreCouloir);
     
     // variables
-    game.setVariableValue("couloirAllume", 1);
+    game.setVariableValue("couloirAllume", 0);
     
 }
 

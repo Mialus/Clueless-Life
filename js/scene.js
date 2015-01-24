@@ -106,7 +106,7 @@ function Scene(_name, _desc, _cvs, _bg, _ambients) {
 	this.getBackgroundImage = function() { return _bg; }  
 
 
-    var darkness = 0;
+    var darkness = 1;
     this.setDarkness = function(d) {
            darkness = d;
     }
@@ -184,11 +184,13 @@ function Scene(_name, _desc, _cvs, _bg, _ambients) {
 		var zPerso = this.getPlayerDisplay().getZIndex();
 		
 		// display the visible passages :
+        /*
 		for (var i in passages) {
 			if (passages[i].isVisible()) {
 				context.drawImage(imgPOI, passages[i].point.x + OFFSET_X - imgPOI.width/2, passages[i].point.y + OFFSET_Y - imgPOI.height/2);
 			}
 		}
+        */
 
 			
 		// display the visible objects on the back of the character
