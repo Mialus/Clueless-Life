@@ -388,12 +388,30 @@ initGameChap3 = function(canvas) {
                 return;
             }
             if (game.getVariableValue("laitChaud") == 1) {
-                game.setVariableValue("bebeNourri", 1);
-                game.setVariableValue("bebeAffame", 0);
-                updatePleurs();
-                game.removeAllMessages();
-                game.messagesToDisplay.push(new Message("Now he is fed.", COLOR_JORIS, -1, -1, -1));	
-                game.displayMessages();
+                
+                game.audio.stop(babyIsBabling);
+                babyIsBabling = false;
+                
+                game.audio.load("gamedata/sounds/baby-drink.mp3", function (buffer) {
+                    source = game.audio.play(buffer, 0.5);
+                    source.addEventListener("ended", function () {
+                        game.setVariableValue("bebeNourri", 1);
+                        game.setVariableValue("bebeAffame", 0);
+                        updatePleurs();
+                        
+                        game.audio.load("gamedata/sounds/baby-burp.mp3", function (buffer) {
+                            source = game.audio.play(buffer, 0.5);
+                            source.addEventListener("ended", function () {
+                                bable();
+                            });
+                        });
+                        game.removeAllMessages();
+                        game.messagesToDisplay.push(new Message("Now he is fed.", COLOR_JORIS, -1, -1, -1));	
+                        game.displayMessages();
+                    });
+                });
+                
+                
             }
             else {
                 game.removeAllMessages();
@@ -451,7 +469,6 @@ initGameChap3 = function(canvas) {
         game.addItemToInventory("bebe");
         game.setVariableValue("bebePris", 1);
         
-        //TODO stop cry start babyIsBabling
         game.getCurrentScene().stop();
         ch3chambre.playAudio = false;
         ch3couloir.playAudio = false;
