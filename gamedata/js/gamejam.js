@@ -1062,12 +1062,12 @@ initGameChap3 = function(canvas) {
     
     
     /*** passages ***/
-    var paCouloirChambre = new Passage(715, 235, ch3chambre, new Point(715, 234, 1.2));
+    var paCouloirChambre = new Passage(715, 235, ch3chambre, new Point(902, 527, 1.2));
     paCouloirChambre.isVisible = function() { return game.getVariableValue("couloirAllume") == 1; }
     paCouloirChambre.getClosestPoint = function() { return new Point(661, 357, 0.8); }
     ch3couloir.addPassage(paCouloirChambre);
     
-    var paChambreCouloir = new Passage(46, 461, ch3couloir, new Point(661, 357, 0.8));
+    var paChambreCouloir = new Passage(902, 527, ch3couloir, new Point(661, 357, 0.8));
     paChambreCouloir.isVisible = function() { return game.getVariableValue("bebeSurTable") == 0; }
     ch3chambre.addPassage(paChambreCouloir);
     
