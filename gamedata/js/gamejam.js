@@ -100,6 +100,14 @@ initGameChap3 = function(canvas) {
     );
     
 	ch3chambre.addCharacter("perso", new CharacterDisplay("perso", perso, meshChambre(), new Point(70, 460, 1.2)), true);
+    ch3chambre.onEntry = function() {
+        if (game.getVariableValue("firstVisitInBedroom") == 1) {
+            game.removeAllMessages();
+            game.messagesToDisplay.push(new Message("The boy's crying... What do we do now?", COLOR_PERSO, -1, -1, -1));
+            game.displayMessages();
+            game.setVariableValue("firstVisitInBedroom", 0);
+        }
+    }
     game.addScene(ch3chambre);
 
     // -- couloir -- //
@@ -250,14 +258,31 @@ initGameChap3 = function(canvas) {
                     game.displayMessages();
                 });
             });
-            
-            
             return;
         }
         game.removeAllMessages();
 		game.messagesToDisplay.push(new Message("To change his diaper, I need a new one and some wipes.", COLOR_JORIS, -1, -1, -1));	
 		game.displayMessages();
     }
+    iaBebeALanger.onUseWithInInventory = function() {
+        if (game.getSelectedObject().id == "biberon") {
+            if (game.getVariableValue("laitChaud") == 1) {
+                game.setVariableValue("bebeNourri", 1);
+                game.removeAllMessages();
+                game.messagesToDisplay.push(new Message("Now he is fed.", COLOR_JORIS, -1, -1, -1));	
+                game.displayMessages();
+            }
+            else {
+                game.removeAllMessages();
+                game.messagesToDisplay.push(new Message("The milk is not ready yet.", COLOR_JORIS, -1, -1, -1));	
+                game.displayMessages();
+            }
+            return;
+        }
+        game.removeAllMessages();
+        game.messagesToDisplay.push(new Message("Nothing to do with that.", COLOR_JORIS, -1, -1, -1));	
+        game.displayMessages();
+       }
     game.allObjects["bebe"] = iaBebeALanger;
     ch3chambre.addObject(iaBebeALanger);
     
@@ -296,7 +321,19 @@ initGameChap3 = function(canvas) {
             };
             bable();
         });
-        
+    }
+    iaBebeBerceau.onUseWith = function() {
+        if (game.getSelectedObject().id == "doudou") {
+            game.removeAllMessages();
+            game.messagesToDisplay.push(new Message("Mission accomplished.", COLOR_JORIS, -1, -1, -1));	
+            game.displayMessages();
+            game.removeItemFromInventory("doudou");
+            game.setVariableValue("doudouTrouve", 1);
+            return;
+        }
+        game.removeAllMessages();
+        game.messagesToDisplay.push(new Message("There is nothing to do with that.", COLOR_JORIS, -1, -1, -1));	
+        game.displayMessages();
     }
     ch3chambre.addInteractiveArea(iaBebeBerceau);
 
@@ -327,6 +364,19 @@ initGameChap3 = function(canvas) {
         }        
         game.removeAllMessages();
         game.messagesToDisplay.push(new Message("No.", COLOR_JORIS, -1, -1, -1));	
+        game.displayMessages();
+    }
+    iaBerceauVide.onUseWith = function() {
+        if (game.getSelectedObject().id == "doudou") {
+            game.removeAllMessages();
+            game.messagesToDisplay.push(new Message("Mission accomplished.", COLOR_JORIS, -1, -1, -1));	
+            game.displayMessages();
+            game.removeItemFromInventory("doudou");
+            game.setVariableValue("doudouTrouve", 1);
+            return;
+        }
+        game.removeAllMessages();
+        game.messagesToDisplay.push(new Message("There is nothing to do with that.", COLOR_JORIS, -1, -1, -1));	
         game.displayMessages();
     }
     ch3chambre.addInteractiveArea(iaBerceauVide);
@@ -498,6 +548,37 @@ initGameChap3 = function(canvas) {
     }
     game.allObjects["biberon"] = biberon;
     ch3chambre.addObject(biberon);
+    
+    
+    var doudou = new Item("doudou", "the cuddly toy", "./gamedata/images/doudouInScene.png", 730, 402, "./gamedata/images/doudou.png");
+    doudou.isVisible = function() {
+        return !game.getInventory().containsItem("doudou") && game.getVariableValue("doudouTrouve") == 0;   
+    }
+    doudou.onLookAtInScene = function() {
+        game.removeAllMessages();
+        game.messagesToDisplay.push(new Message("It's the kid's cuddly toy.", COLOR_PERSO, -1, -1, -1));
+        game.messagesToDisplay.push(new Message("I guess he threw it ouf of its bed. Again.", COLOR_PERSO, -1, -1, -1));
+        game.displayMessages(); 
+    }
+    doudou.onUseInScene = function() {
+        game.addItemToInventory("doudou");
+        game.removeAllMessages();
+        game.messagesToDisplay.push(new Message("Let's pick it up.", COLOR_PERSO, -1, -1, -1));
+        game.displayMessages(); 
+    }
+    doudou.onLookAtInInventory = function() {
+        game.removeAllMessages();
+        game.messagesToDisplay.push(new Message("I think I should put it back in its bed.", COLOR_PERSO, -1, -1, -1));
+        game.displayMessages(); 
+    }
+    doudou.onUseInInventory = function() {
+        game.removeAllMessages();
+        game.messagesToDisplay.push(new Message("Sometimes I miss my cuddly toy.", COLOR_PERSO, -1, -1, -1));
+        game.messagesToDisplay.push(new Message("But now I am a grown up.", COLOR_PERSO, -1, -1, -1));
+        game.displayMessages(); 
+    }
+    game.allObjects["doudou"] = doudou;
+    ch3chambre.addObject(doudou);
  
     
     /*****   CUISINE     *****/
@@ -592,6 +673,9 @@ initGameChap3 = function(canvas) {
     ch3cuisine.addInteractiveArea(iaRobinet);
     
     
+    
+    
+    
     /*** passages ***/
     var paCouloirChambre = new Passage(501, 205, ch3chambre, new Point(70, 460, 1.2));
     paCouloirChambre.isVisible = function() { return game.getVariableValue("couloirAllume") == 1; }
@@ -608,6 +692,7 @@ initGameChap3 = function(canvas) {
     ch3couloir.addPassage(paCouloirCuisine);
     
     /*** variables ***/
+    game.setVariableValue("firstVisitInBedroom", 1);
     game.setVariableValue("couloirAllume", 0);
     game.setVariableValue("bebePris", 0);
     game.setVariableValue("bebePleure", 1);
@@ -616,7 +701,8 @@ initGameChap3 = function(canvas) {
     game.setVariableValue("poudreOK", 0);
     game.setVariableValue("laitOK", 0);
     game.setVariableValue("laitChaud", 0);
-   
+    game.setVariableValue("bebeNourri", 0);
+    game.setVariableValue("doudouTrouve", 0);
 }
 
 
