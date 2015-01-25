@@ -119,7 +119,7 @@ function Scene(_name, _desc, _cvs, _bg, _ambients) {
 	this.loadWithLocation = function(startingPoint) {
 		
         if (startingPoint == null) {
-            startingPoint.getPlayerDisplay().getDefaultPosition();   
+            startingPoint = getPlayerDisplay().getDefaultPosition();   
         }
         
 		this.getPlayerDisplay().setCurrentPoint(new Point(startingPoint.x, startingPoint.y, startingPoint.zoom));

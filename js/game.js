@@ -232,6 +232,7 @@ function Game() {
 			inventory.addItem(this.allObjects[id]);
 			inventory.updateInDisplay();
 			currentScene.redraw();
+            this.updateCursorAndActionLine();
 		}
 		else {
 			// should not happen if the game is well-coded
@@ -245,6 +246,9 @@ function Game() {
 	 */
 	this.removeItemFromInventory = function(id) {
 		inventory.removeItem(id);
+        this.updateInventoryDisplay();
+        this.updateCursorAndActionLine();
+
 	}
 
 
