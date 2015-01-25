@@ -851,7 +851,7 @@ initGameChap3 = function(canvas) {
     /*****   CUISINE     *****/
         
     // eau 
-    var bouteilleEau = new Item("bouteilleEau", "the bottle of water", "./gamedata/images/bouteilleEau.png", 792, 270, "./gamedata/images/bouteilleEau.png");
+    var bouteilleEau = new Item("bouteilleEau", "the bottle of water", "./gamedata/images/bouteilleEau.png", 762, 235, "./gamedata/images/bouteilleEau.png");
     bouteilleEau.onLookAtInScene = bouteilleEau.onLookAtInInventory = function() {
         game.removeAllMessages();
         game.messagesToDisplay.push(new Message("This water is good for the babies.", COLOR_PERSO, -1, -1, -1));
@@ -866,7 +866,8 @@ initGameChap3 = function(canvas) {
     
     
     // poudre 
-    var poudreLait = new Item("poudreLait", "milk powder", "./gamedata/images/poudre.png", 392, 275, "./gamedata/images/poudre.png");
+    var poudreLait = new Item("poudreLait", "milk powder", "./gamedata/images/poudreInScene.png", 480, 185, "./gamedata/images/poudreInInventory.png");
+    poudreLait.getOrientation = function() { return "N"; }
     poudreLait.onLookAtInScene = function() {
         game.removeAllMessages();
         game.messagesToDisplay.push(new Message("This can be used to produce milk for the baby.", COLOR_PERSO, -1, -1, -1));
@@ -907,8 +908,8 @@ initGameChap3 = function(canvas) {
     ch3cuisine.addObject(poudreLait);
     
     // micro-ondes
-    var iaMicroOndes = new InteractiveArea("iaMicroOndes", "the microwave", new Point(592, 361), 20);
-    iaMicroOndes.getOrientation = function() { return "N"; }
+    var iaMicroOndes = new InteractiveArea("iaMicroOndes", "the microwave", new Point(380, 200), 35);
+    iaMicroOndes.getOrientation = function() { return "NW"; }
     iaMicroOndes.onLookAtInScene = function() {
         game.removeAllMessages();
         game.messagesToDisplay.push(new Message("I don't really know how it works, but it works.", COLOR_PERSO, -1, -1, -1));
@@ -939,7 +940,7 @@ initGameChap3 = function(canvas) {
 
                 game.setVariableValue("laitChaud", 1);
                 game.removeAllMessages();
-                game.messagesToDisplay.push(new Message("The milk is now warm.", COLOR_PERSO, -1, -1, -1));
+                game.messagesToDisplay.push(new Message("Here we go.", COLOR_PERSO, -1, -1, -1));
                 game.displayMessages();   
 
             });
@@ -956,7 +957,8 @@ initGameChap3 = function(canvas) {
     ch3cuisine.addInteractiveArea(iaMicroOndes);
     
     // robinet
-    var iaRobinet = new InteractiveArea("iaRobinet", "the tap", new Point(313, 280), 20);
+    var iaRobinet = new InteractiveArea("iaRobinet", "the tap", new Point(450, 208), 15);
+    iaRobinet.getOrientation = function() { return "NW"; }
     iaRobinet.onLookAtInScene = function() {
         game.removeAllMessages();
         game.messagesToDisplay.push(new Message("This is a source of water.", COLOR_PERSO, -1, -1, -1));
@@ -977,7 +979,7 @@ initGameChap3 = function(canvas) {
     
     
     // tetine
-    var tetine = new Item("tetine", "the dummy", "./gamedata/images/tetineInScene.png", 894, 326, "./gamedata/images/tetineInInventory.png");
+    var tetine = new Item("tetine", "the dummy", "./gamedata/images/tetineInScene.png", 860, 326, "./gamedata/images/tetineInInventory.png");
     tetine.getOrientation = function() { return "N"; }
     tetine.getActionWord = function() { return "Pick"; }
     tetine.isVisible = function() { return !game.getInventory().containsItem("tetine") || game.getVariableValue("tetineTrouvee") == 1; }
@@ -992,6 +994,27 @@ initGameChap3 = function(canvas) {
     game.allObjects["tetine"] = tetine;
     ch3cuisine.addObject(tetine);
     
+    
+    var iaCongelateur = new InteractiveArea("iaCongelateur", "the freezer", new Point(980, 127), 35);
+    iaCongelateur.getOrientation = function() { return "N"; }
+    iaCongelateur.onLookAt = function() {
+        game.removeAllMessages();
+        game.messagesToDisplay.push(new Message("It must be frozen in there.", COLOR_PERSO, -1, -1, -1));
+        game.displayMessages();           
+    }
+    iaCongelateur.onUse = function() {
+        game.removeAllMessages();
+        game.messagesToDisplay.push(new Message("I have nothing to freeze.", COLOR_PERSO, -1, -1, -1));
+        game.displayMessages();           
+    }
+    iaCongelateur.onUseWith = function() {
+        var msg = (game.getSelectedObject().id == "bebe") ? "You have serious issues." : "I don't want to freeze that."; 
+        game.removeAllMessages();
+        game.messagesToDisplay.push(new Message(msg, COLOR_PERSO, -1, -1, -1));
+        game.displayMessages();           
+    }
+    
+    ch3cuisine.addInteractiveArea(iaCongelateur);
     
     
     /*** passages ***/
@@ -1065,14 +1088,14 @@ meshCuisine = function() {
     
     var pDroite = new Point(1000, 454, 1.3);
     var pMilieu = new Point(450, 480, 1.3);
-    var pFond = new Point(482, 367, 1.15);
+    var pFond = new Point(492, 367, 1.15);
     var pFrigo = new Point(1004, 376, 1);
-    var pGauche = new Point(91, 426, 1.3);
+    var pGauche = new Point(91, 426, 1.2);
     
-    m.addSegment(new Segment(pDroite, pMilieu, 0.8));
+    m.addSegment(new Segment(pDroite, pMilieu, 1));
     m.addSegment(new Segment(pFond, pMilieu, 0.8));
-    m.addSegment(new Segment(pMilieu, pGauche, 0.8));
-    m.addSegment(new Segment(pDroite, pFrigo, 0.8));
+    m.addSegment(new Segment(pMilieu, pGauche, 1));
+    m.addSegment(new Segment(pDroite, pFrigo, 0.7));
     
     return m;
 }
