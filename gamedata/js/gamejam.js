@@ -283,6 +283,7 @@ initGameChap3 = function(canvas) {
         }
        game.displayMessages();
     }
+    iaBebeALanger.getOrientation = function() { return "E"; }
     iaBebeALanger.getActionWord = function() { return "Pick"; }
     iaBebeALanger.onUseInScene = function() {
         game.setVariableValue("bebePris", 1);
