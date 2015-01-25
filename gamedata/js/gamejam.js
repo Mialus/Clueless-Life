@@ -89,7 +89,7 @@ initGameChap3 = function(canvas) {
         ]
     );
     
-	ch3chambre.addCharacter("perso", new CharacterDisplay("perso", perso, meshChambre(), new Point(70, 460, 1.2)), true);
+	ch3chambre.addCharacter("perso", new CharacterDisplay("perso", perso, meshChambre(), new Point(902, 527, 1.2)), true);
     game.addScene(ch3chambre);
 
     // -- couloir -- //
@@ -104,7 +104,7 @@ initGameChap3 = function(canvas) {
         ]
     );
     ch3couloir.setDarkness(0.05);
-    ch3couloir.addCharacter("perso", new CharacterDisplay("perso", perso, meshCouloir(), new Point(602, 476, 1.2)), true);
+    ch3couloir.addCharacter("perso", new CharacterDisplay("perso", perso, meshCouloir(), new Point(600, 260, 0.3)), true);
     game.addScene(ch3couloir);
     
     // -- Scene Cuisine --//
@@ -117,7 +117,7 @@ initGameChap3 = function(canvas) {
             {uri: "gamedata/sounds/far-cries-05.mp3", volume: 0.05},
             {uri: "gamedata/sounds/far-scream-01.mp3", volume: 0.05}
     ]);
-	ch3cuisine.addCharacter("perso", new CharacterDisplay("perso", perso, meshCuisine(), new Point(982, 580, 1.3)), true);
+	ch3cuisine.addCharacter("perso", new CharacterDisplay("perso", perso, meshCuisine(), new Point(91, 426, 1.2)), true);
     game.addScene(ch3cuisine);
     
 
@@ -1069,7 +1069,7 @@ initGameChap3 = function(canvas) {
     paCouloirChambre.getClosestPoint = function() { return new Point(661, 357, 0.8); }
     ch3couloir.addPassage(paCouloirChambre);
     
-    var paChambreCouloir = new Passage(902, 527, ch3couloir, new Point(661, 357, 0.8));
+    var paChambreCouloir = new Passage(922, 437, ch3couloir, new Point(661, 357, 0.8));
     paChambreCouloir.isVisible = function() { return game.getVariableValue("bebeSurTable") == 0; }
     ch3chambre.addPassage(paChambreCouloir);
     
@@ -1170,16 +1170,16 @@ meshChambre = function() { // TODO check
 
 	var m = new Mesh();
 	
-	var pGauche = new Point(150, 487, 1.2);
+	//var pGauche = new Point(150, 487, 1.2);
 	var pEtagere = new Point(203, 431, 1.2);
 	var pEnFace = new Point(653, 495, 1.2);
 	var pDroite = new Point(902, 527, 1.2);
 	var pBerceau = new Point(624, 390, 1.1);
     var pTableLanger = new Point(700, 390, 1.1);
     
-	m.addSegment(new Segment(pGauche, pEtagere, 0.9));
+	//m.addSegment(new Segment(pGauche, pEtagere, 0.9));
 	m.addSegment(new Segment(pEtagere, pEnFace, 0.9));
-    m.addSegment(new Segment(pGauche, pEnFace, 0.9));
+    //m.addSegment(new Segment(pGauche, pEnFace, 0.9));
     m.addSegment(new Segment(pDroite, pEnFace, 0.9));
     m.addSegment(new Segment(pEnFace, pBerceau, 0.9));
     m.addSegment(new Segment(pEnFace, pTableLanger, 0.9));
