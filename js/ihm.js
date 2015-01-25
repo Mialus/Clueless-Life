@@ -60,7 +60,7 @@ callbackWhenDataIsLoaded = function(d,c) {
  */
 whenLoadingIsFinished = function() {
 	loading = false;			
-	document.getElementById("btnDemarrer").innerHTML = "Démarrer";
+	document.getElementById("btnDemarrer").innerHTML = "Start";
 } 
 
 
@@ -243,7 +243,7 @@ function lancerChapitre(i) {
 	document.getElementById("bcSplashScreen").style.background = "#FFF url(" + chap.splashScreen + ") no-repeat center top";
 	document.getElementById("gamearea").style.display = "none";	
 	
-	document.getElementById("bcSplashScreen").innerHTML = "<p class='chapterTitle'>Chapitre " + i + " - " + chap.title + "</p>";
+	document.getElementById("bcSplashScreen").innerHTML = "<p class='chapterTitle'>" + chap.title + "</p>";
 	if (chap.after != null) {
 		setTimeout("demarrerChapitre(" + i + ")", 5000);	
 	}
