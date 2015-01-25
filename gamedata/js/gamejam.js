@@ -100,6 +100,14 @@ initGameChap3 = function(canvas) {
     );
     
 	ch3chambre.addCharacter("perso", new CharacterDisplay("perso", perso, meshChambre(), new Point(70, 460, 1.2)), true);
+    ch3chambre.onEntry = function() {
+        if (game.getVariableValue("firstVisitInBedroom") == 1) {
+            game.removeAllMessages();
+            game.messagesToDisplay.push(new Message("The boy's crying... What do we do now?", COLOR_PERSO, -1, -1, -1));
+            game.displayMessages();
+            game.setVariableValue("firstVisitInBedroom", 0);
+        }
+    }
     game.addScene(ch3chambre);
 
     // -- couloir -- //
@@ -684,6 +692,7 @@ initGameChap3 = function(canvas) {
     ch3couloir.addPassage(paCouloirCuisine);
     
     /*** variables ***/
+    game.setVariableValue("firstVisitInBedroom", 1);
     game.setVariableValue("couloirAllume", 0);
     game.setVariableValue("bebePris", 0);
     game.setVariableValue("bebePleure", 1);
