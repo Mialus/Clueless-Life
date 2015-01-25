@@ -559,10 +559,9 @@ initGameChap3 = function(canvas) {
         
         if (game.getSelectedObject().id == "doudou") {
             game.removeAllMessages();
-            game.messagesToDisplay.push(new Message("Mission accomplished.", COLOR_JORIS, -1, -1, -1));	
+            game.messagesToDisplay.push(new Message("No I don't want to do that.", COLOR_JORIS, -1, -1, -1));	
+            game.messagesToDisplay.push(new Message("Otherwise he won't notice that its cuddle toy has returned.", COLOR_JORIS, -1, -1, -1));	
             game.displayMessages();
-            game.removeItemFromInventory("doudou");
-            game.setVariableValue("doudouTrouve", 1);
             return;
         }
         
@@ -1029,7 +1028,7 @@ initGameChap3 = function(canvas) {
     var tetine = new Item("tetine", "the dummy", "./gamedata/images/tetineInScene.png", 860, 326, "./gamedata/images/tetineInInventory.png");
     tetine.getOrientation = function() { return "N"; }
     tetine.getActionWord = function() { return "Pick"; }
-    tetine.isVisible = function() { return !game.getInventory().containsItem("tetine") || game.getVariableValue("tetineTrouvee") == 1; }
+    tetine.isVisible = function() { return (!game.getInventory().containsItem("tetine")) && !game.getVariableValue("tetineTrouvee") == 1; }
     tetine.onLookAtInScene = tetine.onLookAtInInventory = function() {
         game.removeAllMessages();
         game.messagesToDisplay.push(new Message("This is the baby's dummy. An efficient pacifier.", COLOR_PERSO, -1, -1, -1));
