@@ -1105,7 +1105,7 @@ initGameChap3 = function(canvas) {
     
     for (var i=0; i < 5; i++) {
         var variable = "couchePleine";
-        switch (Math.floor(Math.random()*4)) {
+        switch (Math.floor(Math.random()*5)) {
             case 0: variable = "doudouPerdu"; break;
             case 1: variable = "temperatureElevee"; break;
             case 2: variable = "bebeAffame"; break;
