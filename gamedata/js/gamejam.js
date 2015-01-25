@@ -93,7 +93,7 @@ initGameChap3 = function(canvas) {
             {uri: "gamedata/sounds/cries-01.mp3", volume: 0.5},
             {uri: "gamedata/sounds/cries-02.mp3", volume: 0.5},
             {uri: "gamedata/sounds/cries-03.mp3", volume: 0.5},
-            {uri: "gamedata/sounds/cries-04.mp3", volume: 0.5},
+            {uri: "gamedata/sounds/cries-04.mp3", volume: 0.5}
             //{uri: "gamedata/sounds/babling-01.mp3", volume: 0.25},
             //{uri: "gamedata/sounds/cough-02.mp3", volume: 0.25},
         ]
@@ -110,7 +110,7 @@ initGameChap3 = function(canvas) {
             {uri: "gamedata/sounds/far-cries-03.mp3", volume: 0.1},
             {uri: "gamedata/sounds/far-cries-04.mp3", volume: 0.1},
             {uri: "gamedata/sounds/far-cries-05.mp3", volume: 0.1},
-            {uri: "gamedata/sounds/far-scream-01.mp3", volume: 0.1},
+            {uri: "gamedata/sounds/far-scream-01.mp3", volume: 0.1}
         ]
     );
     ch3couloir.setDarkness(0.05);
@@ -118,7 +118,15 @@ initGameChap3 = function(canvas) {
     game.addScene(ch3couloir);
     
     // -- Scene Cuisine --//
-    var ch3cuisine = new Scene("ch3-cuisine", "the kitchen", canvas, "./gamedata/images/cuisine.jpg");
+    var ch3cuisine = new Scene("ch3-cuisine", "the kitchen", canvas, "./gamedata/images/cuisine.jpg",
+                              [
+            {uri: "gamedata/sounds/far-cries-01.mp3", volume: 0.05},
+            {uri: "gamedata/sounds/far-cries-02.mp3", volume: 0.05},
+            {uri: "gamedata/sounds/far-cries-03.mp3", volume: 0.05},
+            {uri: "gamedata/sounds/far-cries-04.mp3", volume: 0.05},
+            {uri: "gamedata/sounds/far-cries-05.mp3", volume: 0.05},
+            {uri: "gamedata/sounds/far-scream-01.mp3", volume: 0.05}
+    ]);
 	ch3cuisine.addCharacter("perso", new CharacterDisplay("perso", perso, meshCuisine(), new Point(982, 580, 1.3)), true);
     game.addScene(ch3cuisine);
     
@@ -445,11 +453,14 @@ initGameChap3 = function(canvas) {
         
         //TODO stop cry start babyIsBabling
         game.getCurrentScene().stop();
+        ch3chambre.playAudio = false;
+        ch3couloir.playAudio = false;
+        ch3cuisine.playAudio = false;
         //{uri: "gamedata/sounds/babling-01.mp3", volume: 0.25}
         game.audio.load("gamedata/sounds/babling-01.mp3", function (buffer) {
             bable = function () {
                 babyIsBabling = game.audio.play(buffer, 0.25);
-                babyIsBabling.addEventListener("ended", bable);
+                babyIsBabling.addEventListener("ended", function () { if (babyIsBabling != false) bable();} );
             };
             bable();
         });
@@ -506,23 +517,30 @@ initGameChap3 = function(canvas) {
             //TODO stop babyIsBabling start crying if crying baby
             game.audio.stop(babyIsBabling);
             babyIsBabling = false;
+            ch3chambre.playAudio = true;
+            ch3couloir.playAudio = true;
+            ch3cuisine.playAudio = true;
             if (game.getVariableValue("bebePleure") == 1) {
                 game.getCurrentScene().startAudio();
             }
             
             return;
-        }        
+        }   
+        
         if (game.getSelectedObject().id == "doudou") {
             game.removeAllMessages();
-            game.messagesToDisplay.push(new Message("I should put it in the bed when the baby is in it.", COLOR_JORIS, -1, -1, -1));	
-            game.messagesToDisplay.push(new Message("Otherwise, he will not notice that his cuddly toy has returned.", COLOR_JORIS, -1, -1, -1));	
+            game.messagesToDisplay.push(new Message("Mission accomplished.", COLOR_JORIS, -1, -1, -1));	
             game.displayMessages();
+            game.removeItemFromInventory("doudou");
+            game.setVariableValue("doudouTrouve", 1);
             return;
         }
+        
         game.removeAllMessages();
         game.messagesToDisplay.push(new Message("There is nothing to do with that.", COLOR_JORIS, -1, -1, -1));	
         game.displayMessages();
     }
+    
     ch3chambre.addInteractiveArea(iaBerceauVide);
 
 
@@ -662,7 +680,13 @@ initGameChap3 = function(canvas) {
         game.displayMessages();           
     }
     biberon.onUseInScene = function() {
-        game.addItemToInventory("biberon");           
+        game.audio.load("gamedata/sounds/bottle-out-microwave.mp3", function (buffer) {
+            source = game.audio.play(buffer);
+            source.addEventListener("ended", function () {
+                game.addItemToInventory("biberon");                   
+            });
+        });
+        
     }
     biberon.onUseWithInInventory = function() {
         if (game.getSelectedObject().id != "bouteilleEau") {
@@ -680,10 +704,16 @@ initGameChap3 = function(canvas) {
         }
             
         if (game.getVariableValue("poudreOK") == 1) {
-            game.setVariableValue("laitOK", 1);
-            game.removeAllMessages();
-            game.messagesToDisplay.push(new Message("The milk is ready. I now need to warm it.", COLOR_PERSO, -1, -1, -1));
-            game.displayMessages(); 
+            game.audio.load("gamedata/sounds/fill-bottle-full.mp3", function (buffer) {
+                source = game.audio.play(buffer);
+                source.addEventListener("ended", function () {
+                    game.setVariableValue("laitOK", 1);
+                    game.removeAllMessages();
+                    game.messagesToDisplay.push(new Message("The milk is ready. I now need to warm it.", COLOR_PERSO, -1, -1, -1));
+                    game.displayMessages(); 
+                });
+            });
+            
             return;
         }
         game.removeAllMessages();
@@ -795,11 +825,18 @@ initGameChap3 = function(canvas) {
     }
     iaEtagere.onUseWith = function() {
         if (game.getSelectedObject().id == "biberon") {
-            game.removeItemFromInventory("biberon"); 
-            game.getCurrentScene().redraw();
-            game.removeAllMessages();
-            game.messagesToDisplay.push(new Message("Back to where it belongs.", COLOR_PERSO, -1, -1, -1));
-            game.displayMessages(); 
+            
+            game.audio.load("gamedata/sounds/bottle-on-shelf.mp3", function (buffer) {
+                source = game.audio.play(buffer);
+                source.addEventListener("ended", function () {
+                    game.removeItemFromInventory("biberon"); 
+                    game.getCurrentScene().redraw();
+                    game.removeAllMessages();
+                    game.messagesToDisplay.push(new Message("Back to where it belongs.", COLOR_PERSO, -1, -1, -1));
+                    game.displayMessages(); 
+                });
+            });
+            
             return;
         }
         game.removeAllMessages();
@@ -842,10 +879,29 @@ initGameChap3 = function(canvas) {
             game.displayMessages();           
             return;
         }
-        game.setVariableValue("poudreOK", 1);
-        game.removeAllMessages();
-        game.messagesToDisplay.push(new Message("OK. Done.", COLOR_PERSO, -1, -1, -1));
-        game.displayMessages();           
+        
+        game.audio.load("gamedata/sounds/bottle-powder.mp3", function (bufferPowder) {
+            game.audio.load("gamedata/sounds/bottle-spoon.mp3", function (bufferSpoon) {
+                
+                game.messagesToDisplay.push(new Message("1 ... 2 ... 3 ... 4 ...", COLOR_PERSO, -1, -1, -1));
+                
+                game.displayMessages();  
+                
+                game.audio.play(bufferPowder, 2.0);
+                source = game.audio.play(bufferSpoon);
+                
+                source.addEventListener("ended", function () {
+                
+                    game.setVariableValue("poudreOK", 1);
+                    game.removeAllMessages();
+                    game.messagesToDisplay.push(new Message(" ...  ... ... 42. OK. Done.", COLOR_PERSO, -1, -1, -1));
+                    game.displayMessages();  
+                    
+                });
+                
+            });
+        });
+                 
     }
     game.allObjects["poudreLait"] = poudreLait;
     ch3cuisine.addObject(poudreLait);
@@ -875,13 +931,27 @@ initGameChap3 = function(canvas) {
             game.displayMessages();           
             return;
         }
-        game.setVariableValue("laitChaud", 1);
-        game.removeAllMessages();
+ 
+        game.audio.load("gamedata/sounds/microwave-cycle-full.mp3", function (buffer) {
+            
+            source = game.audio.play(buffer);
+            source.addEventListener("ended", function () {
+
+                game.setVariableValue("laitChaud", 1);
+                game.removeAllMessages();
+                game.messagesToDisplay.push(new Message("The milk is now warm.", COLOR_PERSO, -1, -1, -1));
+                game.displayMessages();   
+
+            });
+            
+        });
+        
         game.messagesToDisplay.push(new Message("What do we do now?", COLOR_PERSO, -1, -1, -1));
         game.messagesToDisplay.push(new Message("Maybe, finally, we just have to wait.", COLOR_PERSO, -1, -1, -1));
         game.messagesToDisplay.push(new Message("Wait for the milk...", COLOR_PERSO, -1, -1, -1));
         game.messagesToDisplay.push(new Message("... to be warm.", COLOR_PERSO, -1, -1, -1));
         game.displayMessages();           
+
     }
     ch3cuisine.addInteractiveArea(iaMicroOndes);
     

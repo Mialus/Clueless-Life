@@ -59,6 +59,8 @@ function Scene(_name, _desc, _cvs, _bg, _ambients) {
 	// id of the character played by the player
 	var playedCharacter = "";
 	
+    this.playAudio = false;
+    
     // ambient sounds
     if (_ambients) {
         var _this = this;
@@ -67,6 +69,7 @@ function Scene(_name, _desc, _cvs, _bg, _ambients) {
             (function (ambient) {
                 game.audio.load(ambient.uri, function (buffer) {
                     _this.addAmbient(ambient.uri, buffer, ambient.volume);
+                    _this.playAudio = true;
                 });
             } (ambient));
         }
@@ -138,7 +141,9 @@ function Scene(_name, _desc, _cvs, _bg, _ambients) {
 		};
 		imgBG.onerror = function() { console.log("Error while loading background: " + imgBG.src); };
 
-        this.startAudio();
+        if (this.playAudio) {
+            this.startAudio();
+        }
         
 		if (this.onEntry != null) {
 			this.onEntry();	
@@ -196,7 +201,11 @@ function Scene(_name, _desc, _cvs, _bg, _ambients) {
 		// display the visible objects on the back of the character
 		for (var i in displayStack) {
 			if (displayStack[i].getZIndex() <= zPerso && displayStack[i].isVisible()) {
+                try {
 					context.drawImage(displayStack[i].spriteInScene, displayStack[i].x + OFFSET_X, displayStack[i].y + OFFSET_Y);						
+                } catch (ex) {
+                    //console.log(ex);
+                }
 			}
 		}
 
