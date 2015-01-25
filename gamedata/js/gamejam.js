@@ -178,7 +178,7 @@ initGameChap3 = function(canvas) {
             plusRien = false;
             game.messagesToDisplay.push(new Message("I need to get rid of the baby bottle.", COLOR_PERSO, -1, -1, -1));
         }
-        if (game.getInventory().containsItem("thermometer") == 1) {
+        if (game.getInventory().containsItem("thermometre") == 1) {
             plusRien = false;
             game.messagesToDisplay.push(new Message("I need to get rid of this thermometer.", COLOR_PERSO, -1, -1, -1));
         }
@@ -283,6 +283,7 @@ initGameChap3 = function(canvas) {
         }
        game.displayMessages();
     }
+    iaBebeALanger.getOrientation = function() { return "E"; }
     iaBebeALanger.getActionWord = function() { return "Pick"; }
     iaBebeALanger.onUseInScene = function() {
         game.setVariableValue("bebePris", 1);
@@ -440,6 +441,7 @@ initGameChap3 = function(canvas) {
     // -- berceau avec bébé -- //
     var iaBebeBerceau = new InteractiveArea("iaBebeBerceau", "the baby in cradle", new Point(520, 350), 60);
     iaBebeBerceau.getClosestPoint = function() { return new Point(624, 390, 1.1); }
+    iaBebeBerceau.getOrientation = function() { return "W"; }
     iaBebeBerceau.isVisible = function() {
         return game.getVariableValue("bebePris") == 0 && game.getVariableValue("bebeSurTable") == 0;   
     }
@@ -530,7 +532,8 @@ initGameChap3 = function(canvas) {
     // -- berceau vide -- //
     var iaBerceauVide = new Item("iaBerceauVide", "the empty cradle", "./gamedata/images/berceauVide.png", 460, 254, "./gamedata/images/berceauVide.png");
     iaBerceauVide.getClosestPoint = function() { return new Point(624, 390, 1.1); }
-    iaBerceauVide.isVisible = function() {
+    iaBerceauVide.getOrientation = function() { return "W"; }
+   iaBerceauVide.isVisible = function() {
         return game.getVariableValue("bebePris") == 1 || game.getVariableValue("bebeSurTable") == 1;   
     }
     iaBerceauVide.onLookAtInScene = function() {
@@ -559,10 +562,9 @@ initGameChap3 = function(canvas) {
         
         if (game.getSelectedObject().id == "doudou") {
             game.removeAllMessages();
-            game.messagesToDisplay.push(new Message("Mission accomplished.", COLOR_JORIS, -1, -1, -1));	
+            game.messagesToDisplay.push(new Message("No I don't want to do that.", COLOR_JORIS, -1, -1, -1));	
+            game.messagesToDisplay.push(new Message("Otherwise he won't notice that its cuddle toy has returned.", COLOR_JORIS, -1, -1, -1));	
             game.displayMessages();
-            game.removeItemFromInventory("doudou");
-            game.setVariableValue("doudouTrouve", 1);
             return;
         }
         
@@ -1029,7 +1031,7 @@ initGameChap3 = function(canvas) {
     var tetine = new Item("tetine", "the dummy", "./gamedata/images/tetineInScene.png", 860, 326, "./gamedata/images/tetineInInventory.png");
     tetine.getOrientation = function() { return "N"; }
     tetine.getActionWord = function() { return "Pick"; }
-    tetine.isVisible = function() { return !game.getInventory().containsItem("tetine") || game.getVariableValue("tetineTrouvee") == 1; }
+    tetine.isVisible = function() { return (!game.getInventory().containsItem("tetine")) && !game.getVariableValue("tetineTrouvee") == 1; }
     tetine.onLookAtInScene = tetine.onLookAtInInventory = function() {
         game.removeAllMessages();
         game.messagesToDisplay.push(new Message("This is the baby's dummy. An efficient pacifier.", COLOR_PERSO, -1, -1, -1));
