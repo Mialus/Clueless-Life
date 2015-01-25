@@ -245,7 +245,7 @@ initGameChap3 = function(canvas) {
     }
     ch3chambre.addInteractiveArea(iaPaquetCouches);
 
-    var iaTableALanger = new InteractiveArea("iaTableALanger", "the baby-changing table", new Point(890, 240), 30);
+    var iaTableALanger = new InteractiveArea("iaTableALanger", "the baby-changing table", new Point(802, 264), 30);
     iaTableALanger.isVisible = function() {
         return game.getVariableValue("bebeSurTable") == 0;   
     }
