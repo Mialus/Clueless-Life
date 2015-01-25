@@ -148,10 +148,11 @@ initGameChap3 = function(canvas) {
     ch3couloir.addInteractiveArea(iaInterrupteur);
     
     // -- chambre des parents --
-    var iaChambreParents = new InteractiveArea("iaChambreParents", "the parent's room", new Point(615, 210), 10);
+    var iaChambreParents = new InteractiveArea("iaChambreParents", "the parent's room", new Point(615, 210), 30);
     iaChambreParents.getOrientation = function() {
         return "NE";   
     }
+    iaChambreParents.getActionWord = function() { return "Enter"; }
     iaChambreParents.onLookAt = function() {
  		game.removeAllMessages();
 		game.messagesToDisplay.push(new Message("I'd like to go back in there.", COLOR_PERSO, -1, -1, -1));
@@ -855,7 +856,7 @@ initGameChap3 = function(canvas) {
     game.allObjects["doliprane"] = doliprane;
     
     // -- etagere -- //
-    var iaEtagere = new InteractiveArea("iaEtagere", "the shelf", new Point(190, 185), 10);
+    var iaEtagere = new InteractiveArea("iaEtagere", "the shelf", new Point(154, 260), 10);
     iaEtagere.isVisible = function() { return game.getInventory().containsItem("biberon"); }
     iaEtagere.onLookAt = function() {
         game.removeAllMessages();
