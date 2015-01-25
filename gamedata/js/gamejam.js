@@ -93,7 +93,7 @@ initGameChap3 = function(canvas) {
             {uri: "gamedata/sounds/cries-01.mp3", volume: 0.5},
             {uri: "gamedata/sounds/cries-02.mp3", volume: 0.5},
             {uri: "gamedata/sounds/cries-03.mp3", volume: 0.5},
-            {uri: "gamedata/sounds/cries-04.mp3", volume: 0.5},
+            {uri: "gamedata/sounds/cries-04.mp3", volume: 0.5}
             //{uri: "gamedata/sounds/babling-01.mp3", volume: 0.25},
             //{uri: "gamedata/sounds/cough-02.mp3", volume: 0.25},
         ]
@@ -118,7 +118,7 @@ initGameChap3 = function(canvas) {
             {uri: "gamedata/sounds/far-cries-03.mp3", volume: 0.1},
             {uri: "gamedata/sounds/far-cries-04.mp3", volume: 0.1},
             {uri: "gamedata/sounds/far-cries-05.mp3", volume: 0.1},
-            {uri: "gamedata/sounds/far-scream-01.mp3", volume: 0.1},
+            {uri: "gamedata/sounds/far-scream-01.mp3", volume: 0.1}
         ]
     );
     ch3couloir.setDarkness(0.05);
@@ -126,7 +126,15 @@ initGameChap3 = function(canvas) {
     game.addScene(ch3couloir);
     
     // -- Scene Cuisine --//
-    var ch3cuisine = new Scene("ch3-cuisine", "the kitchen", canvas, "./gamedata/images/cuisine.jpg");
+    var ch3cuisine = new Scene("ch3-cuisine", "the kitchen", canvas, "./gamedata/images/cuisine.jpg",
+                              [
+            {uri: "gamedata/sounds/far-cries-01.mp3", volume: 0.05},
+            {uri: "gamedata/sounds/far-cries-02.mp3", volume: 0.05},
+            {uri: "gamedata/sounds/far-cries-03.mp3", volume: 0.05},
+            {uri: "gamedata/sounds/far-cries-04.mp3", volume: 0.05},
+            {uri: "gamedata/sounds/far-cries-05.mp3", volume: 0.05},
+            {uri: "gamedata/sounds/far-scream-01.mp3", volume: 0.05}
+    ]);
 	ch3cuisine.addCharacter("perso", new CharacterDisplay("perso", perso, meshCuisine(), new Point(982, 580, 1.3)), true);
     game.addScene(ch3cuisine);
     
@@ -313,6 +321,9 @@ initGameChap3 = function(canvas) {
         
         //TODO stop cry start babyIsBabling
         game.getCurrentScene().stop();
+        ch3chambre.playAudio = false;
+        ch3couloir.playAudio = false;
+        ch3cuisine.playAudio = false;
         //{uri: "gamedata/sounds/babling-01.mp3", volume: 0.25}
         game.audio.load("gamedata/sounds/babling-01.mp3", function (buffer) {
             bable = function () {
@@ -356,17 +367,30 @@ initGameChap3 = function(canvas) {
             //TODO stop babyIsBabling start crying if crying baby
             game.audio.stop(babyIsBabling);
             babyIsBabling = false;
+            ch3chambre.playAudio = true;
+            ch3couloir.playAudio = true;
+            ch3cuisine.playAudio = true;
             if (game.getVariableValue("bebePleure") == 1) {
                 game.getCurrentScene().startAudio();
             }
             
             return;
-        }        
+        }   
+        
+        if (game.getSelectedObject().id == "doudou") {
+            game.removeAllMessages();
+            game.messagesToDisplay.push(new Message("Mission accomplished.", COLOR_JORIS, -1, -1, -1));	
+            game.displayMessages();
+            game.removeItemFromInventory("doudou");
+            game.setVariableValue("doudouTrouve", 1);
+            return;
+        }
+        
         game.removeAllMessages();
-        game.messagesToDisplay.push(new Message("No.", COLOR_JORIS, -1, -1, -1));	
+        game.messagesToDisplay.push(new Message("There is nothing to do with that.", COLOR_JORIS, -1, -1, -1));	
         game.displayMessages();
     }
-    iaBerceauVide.onUseWith = function() {
+    /*iaBerceauVide.onUseWith = function() {
         if (game.getSelectedObject().id == "doudou") {
             game.removeAllMessages();
             game.messagesToDisplay.push(new Message("Mission accomplished.", COLOR_JORIS, -1, -1, -1));	
@@ -378,7 +402,7 @@ initGameChap3 = function(canvas) {
         game.removeAllMessages();
         game.messagesToDisplay.push(new Message("There is nothing to do with that.", COLOR_JORIS, -1, -1, -1));	
         game.displayMessages();
-    }
+    }*/
     ch3chambre.addInteractiveArea(iaBerceauVide);
 
 

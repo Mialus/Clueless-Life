@@ -103,11 +103,13 @@ function Audio() {
         if (!source && currentLoop) {
             source = currentLoop;
         }
-        if (source.timer) {
-            clearTimeout(source.timer);
-            source.timer = null;
+        if (source) {
+            if (source.timer) {
+                clearTimeout(source.timer);
+                source.timer = null;
+            }
+            source.stop(0);
         }
-        source.stop(0);
     };
     
 }
