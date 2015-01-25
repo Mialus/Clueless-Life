@@ -10,3 +10,4 @@ This game, developed during the 2015 Global Game Jam, proposes to impersonate a 
 
 It is important to notice that there are a several reasons why the baby may be crying (e.g. he might be hungry, or need his dummy, etc.). Each time the game is ran, a combination of these objectives is chosen, to create a unique experience each time you play. 
 
+WORKS ON FIREFOX ONLY
