@@ -7,7 +7,7 @@ var COLOR_PERSO = "#AACCFF";
 var COLOR_JORIS = "#AACCFF";
 
 var imgPerso = new Image();
-imgPerso.src = "./gamedata/images/spritesheet-perso.png";
+imgPerso.src = "./gamedata/images/ligne_1.png";
 imgPerso.onerror = function() { alert("Error while loading spritesheet: " + imgPerso.src); };
 
 
@@ -993,10 +993,16 @@ meshCuisine = function() {
  
     var m = new Mesh();
     
-    var pDroite = new Point(982, 580, 1.3);
-    var pGauche = new Point(576, 496, 1.3);
+    var pDroite = new Point(1000, 454, 1.3);
+    var pMilieu = new Point(450, 480, 1.3);
+    var pFond = new Point(482, 367, 1.15);
+    var pFrigo = new Point(1004, 376, 1);
+    var pGauche = new Point(91, 426, 1.3);
     
-    m.addSegment(new Segment(pDroite, pGauche, 0.8));
+    m.addSegment(new Segment(pDroite, pMilieu, 0.8));
+    m.addSegment(new Segment(pFond, pMilieu, 0.8));
+    m.addSegment(new Segment(pMilieu, pGauche, 0.8));
+    m.addSegment(new Segment(pDroite, pFrigo, 0.8));
     
     return m;
 }
