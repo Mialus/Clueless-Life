@@ -7,7 +7,7 @@ var COLOR_PERSO = "#AACCFF";
 var COLOR_JORIS = "#AACCFF";
 
 var imgPerso = new Image();
-imgPerso.src = "./gamedata/images/spritesheet-perso.png";
+imgPerso.src = "./gamedata/images/ligne_1.png";
 imgPerso.onerror = function() { alert("Error while loading spritesheet: " + imgPerso.src); };
 
 
@@ -131,19 +131,13 @@ initGameChap3 = function(canvas) {
     game.addScene(ch3cuisine);
     
 
-    // -- poutre (à faire disparaitre pour la version finale -- //
-    var sePoutre = new SceneElement("./gamedata/images/poutre.png", 396, 115);
-	sePoutre.getZIndex = function() { return 8; };
-	ch3couloir.addSceneElement(sePoutre);
-	
-
     // -- Interrupteur du couloir -- //
-    var iaInterrupteur = new InteractiveArea("iaInterrupteur", "the switch", new Point(620, 230), 8, "gamedata/sounds/switch.mp3");
+    var iaInterrupteur = new InteractiveArea("iaInterrupteur", "the switch", new Point(641, 207), 8, "gamedata/sounds/switch.mp3");
     iaInterrupteur.getClosestPoint = function() { 
-        return new Point(583, 411);
+        return new Point(615, 270);
     }
     iaInterrupteur.getOrientation = function() {
-        return "NE";   
+        return "E";   
     }
     iaInterrupteur.onLookAt = function() {
         var msg = game.getVariableValue("couloirAllume") == 1 ? "It's the corridor's switch." : "There is something there, but I can't see what.";
@@ -164,10 +158,7 @@ initGameChap3 = function(canvas) {
     ch3couloir.addInteractiveArea(iaInterrupteur);
     
     // -- chambre des parents --
-    var iaChambreParents = new InteractiveArea("iaChambreParents", "the parent's room", new Point(594, 230), 10);
-    iaChambreParents.getClosestPoint = function() { 
-        return new Point(583, 411);
-    }
+    var iaChambreParents = new InteractiveArea("iaChambreParents", "the parent's room", new Point(615, 210), 10);
     iaChambreParents.getOrientation = function() {
         return "NE";   
     }
@@ -880,7 +871,7 @@ initGameChap3 = function(canvas) {
     /*****   CUISINE     *****/
         
     // eau 
-    var bouteilleEau = new Item("bouteilleEau", "the bottle of water", "./gamedata/images/bouteilleEau.png", 792, 270, "./gamedata/images/bouteilleEau.png");
+    var bouteilleEau = new Item("bouteilleEau", "the bottle of water", "./gamedata/images/bouteilleEau.png", 762, 235, "./gamedata/images/bouteilleEau.png");
     bouteilleEau.onLookAtInScene = bouteilleEau.onLookAtInInventory = function() {
         game.removeAllMessages();
         game.messagesToDisplay.push(new Message("This water is good for the babies.", COLOR_PERSO, -1, -1, -1));
@@ -901,7 +892,8 @@ initGameChap3 = function(canvas) {
     
     
     // poudre 
-    var poudreLait = new Item("poudreLait", "milk powder", "./gamedata/images/poudre.png", 392, 275, "./gamedata/images/poudre.png");
+    var poudreLait = new Item("poudreLait", "milk powder", "./gamedata/images/poudreInScene.png", 480, 185, "./gamedata/images/poudreInInventory.png");
+    poudreLait.getOrientation = function() { return "N"; }
     poudreLait.onLookAtInScene = function() {
         game.removeAllMessages();
         game.messagesToDisplay.push(new Message("This can be used to produce milk for the baby.", COLOR_PERSO, -1, -1, -1));
@@ -942,8 +934,8 @@ initGameChap3 = function(canvas) {
     ch3cuisine.addObject(poudreLait);
     
     // micro-ondes
-    var iaMicroOndes = new InteractiveArea("iaMicroOndes", "the microwave", new Point(592, 361), 20);
-    iaMicroOndes.getOrientation = function() { return "N"; }
+    var iaMicroOndes = new InteractiveArea("iaMicroOndes", "the microwave", new Point(380, 200), 35);
+    iaMicroOndes.getOrientation = function() { return "NW"; }
     iaMicroOndes.onLookAtInScene = function() {
         game.removeAllMessages();
         game.messagesToDisplay.push(new Message("I don't really know how it works, but it works.", COLOR_PERSO, -1, -1, -1));
@@ -975,7 +967,7 @@ initGameChap3 = function(canvas) {
 
                 
                 game.removeAllMessages();
-                game.messagesToDisplay.push(new Message("The milk is now warm.", COLOR_PERSO, -1, -1, -1));
+                game.messagesToDisplay.push(new Message("Here we go.", COLOR_PERSO, -1, -1, -1));
                 game.displayMessages();   
 
             });
@@ -992,7 +984,8 @@ initGameChap3 = function(canvas) {
     ch3cuisine.addInteractiveArea(iaMicroOndes);
     
     // robinet
-    var iaRobinet = new InteractiveArea("iaRobinet", "the tap", new Point(313, 280), 20);
+    var iaRobinet = new InteractiveArea("iaRobinet", "the tap", new Point(450, 208), 15);
+    iaRobinet.getOrientation = function() { return "NW"; }
     iaRobinet.onLookAtInScene = function() {
         game.removeAllMessages();
         game.messagesToDisplay.push(new Message("This is a source of water.", COLOR_PERSO, -1, -1, -1));
@@ -1013,7 +1006,7 @@ initGameChap3 = function(canvas) {
     
     
     // tetine
-    var tetine = new Item("tetine", "the dummy", "./gamedata/images/tetineInScene.png", 894, 326, "./gamedata/images/tetineInInventory.png");
+    var tetine = new Item("tetine", "the dummy", "./gamedata/images/tetineInScene.png", 860, 326, "./gamedata/images/tetineInInventory.png");
     tetine.getOrientation = function() { return "N"; }
     tetine.getActionWord = function() { return "Pick"; }
     tetine.isVisible = function() { return !game.getInventory().containsItem("tetine") || game.getVariableValue("tetineTrouvee") == 1; }
@@ -1029,20 +1022,42 @@ initGameChap3 = function(canvas) {
     ch3cuisine.addObject(tetine);
     
     
+    var iaCongelateur = new InteractiveArea("iaCongelateur", "the freezer", new Point(980, 127), 35);
+    iaCongelateur.getOrientation = function() { return "N"; }
+    iaCongelateur.onLookAt = function() {
+        game.removeAllMessages();
+        game.messagesToDisplay.push(new Message("It must be frozen in there.", COLOR_PERSO, -1, -1, -1));
+        game.displayMessages();           
+    }
+    iaCongelateur.onUse = function() {
+        game.removeAllMessages();
+        game.messagesToDisplay.push(new Message("I have nothing to freeze.", COLOR_PERSO, -1, -1, -1));
+        game.displayMessages();           
+    }
+    iaCongelateur.onUseWith = function() {
+        var msg = (game.getSelectedObject().id == "bebe") ? "You have serious issues." : "I don't want to freeze that."; 
+        game.removeAllMessages();
+        game.messagesToDisplay.push(new Message(msg, COLOR_PERSO, -1, -1, -1));
+        game.displayMessages();           
+    }
+    
+    ch3cuisine.addInteractiveArea(iaCongelateur);
+    
     
     /*** passages ***/
-    var paCouloirChambre = new Passage(501, 205, ch3chambre, new Point(70, 460, 1.2));
+    var paCouloirChambre = new Passage(715, 235, ch3chambre, new Point(715, 234, 1.2));
     paCouloirChambre.isVisible = function() { return game.getVariableValue("couloirAllume") == 1; }
+    paCouloirChambre.getClosestPoint = function() { return new Point(661, 357, 0.8); }
     ch3couloir.addPassage(paCouloirChambre);
     
-    var paChambreCouloir = new Passage(46, 461, ch3couloir, new Point(472, 292, 0.5));
+    var paChambreCouloir = new Passage(46, 461, ch3couloir, new Point(661, 357, 0.8));
     paChambreCouloir.isVisible = function() { return game.getVariableValue("bebeSurTable") == 0; }
     ch3chambre.addPassage(paChambreCouloir);
     
-    var paCuisineCouloir = new Passage(970, 575, ch3couloir, new Point(602, 476, 1.2));
+    var paCuisineCouloir = new Passage(40, 280, ch3couloir, new Point(727, 465, 1.2));
     ch3cuisine.addPassage(paCuisineCouloir);
     
-    var paCouloirCuisine = new Passage(602, 476, ch3cuisine, new Point(970, 575, 1.3));
+    var paCouloirCuisine = new Passage(870, 455, ch3cuisine, new Point(91, 426, 1.2));
     paCouloirCuisine.isVisible = function() { return game.getVariableValue("couloirAllume") == 1; }
     ch3couloir.addPassage(paCouloirCuisine);
     
@@ -1099,10 +1114,16 @@ meshCuisine = function() {
  
     var m = new Mesh();
     
-    var pDroite = new Point(982, 580, 1.3);
-    var pGauche = new Point(576, 496, 1.3);
+    var pDroite = new Point(1000, 454, 1.3);
+    var pMilieu = new Point(450, 480, 1.3);
+    var pFond = new Point(492, 367, 1.15);
+    var pFrigo = new Point(1004, 376, 1);
+    var pGauche = new Point(91, 426, 1.2);
     
-    m.addSegment(new Segment(pDroite, pGauche, 0.8));
+    m.addSegment(new Segment(pDroite, pMilieu, 1));
+    m.addSegment(new Segment(pFond, pMilieu, 0.8));
+    m.addSegment(new Segment(pMilieu, pGauche, 1));
+    m.addSegment(new Segment(pDroite, pFrigo, 0.7));
     
     return m;
 }
@@ -1111,11 +1132,11 @@ meshCouloir = function() {
  
     var m = new Mesh();
     
-    var pChambre1 = new Point(472, 292, 0.5);
-    var pChambre2 = new Point(519, 381, 1);
-    var pSortie = new Point(602, 476, 1.2);
+    var pChambre1 = new Point(600, 260, 0.3);
+    var pChambre2 = new Point(661, 357, 0.8);
+    var pSortie = new Point(727, 465, 1.2);
     
-    m.addSegment(new Segment(pChambre1, pChambre2, 0.5));
+    m.addSegment(new Segment(pChambre1, pChambre2, 0.3));
     m.addSegment(new Segment(pChambre2, pSortie, 0.8));
     
     return m;    
