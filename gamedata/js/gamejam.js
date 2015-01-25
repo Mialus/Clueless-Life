@@ -312,6 +312,7 @@ initGameChap3 = function(canvas) {
                 game.getInventory().containsItem("couchePropre") && game.getInventory().containsItem("lingette")) {
             
             game.removeItemFromInventory("lingette");
+            game.removeItemFromInventory("couchePropre");
             game.setVariableValue("bebeChange", 1);
             
             game.audio.load("gamedata/sounds/clean-bottom-back-02.mp3", function (buffer) {
@@ -330,10 +331,11 @@ initGameChap3 = function(canvas) {
                     game.removeAllMessages();                                        
                     if (game.getVariableValue("couchePleine") == 1) {
                         game.addItemToInventory("coucheSale");
-                        game.removeItemFromInventory("couchePropre");
+                        
                         game.messagesToDisplay.push(new Message("You should feel better now.", COLOR_JORIS, -1, -1, -1));	
                     }
                     else {
+                        game.addItemToInventory("couchePropre");
                         game.messagesToDisplay.push(new Message("The diaper was clean. But still I changed it.", COLOR_JORIS, -1, -1, -1));	
                         game.messagesToDisplay.push(new Message("It need to trash the old one.", COLOR_JORIS, -1, -1, -1));	
                     }
@@ -392,11 +394,13 @@ initGameChap3 = function(canvas) {
                 game.audio.stop(babyIsBabling);
                 babyIsBabling = false;
                 
+                game.setVariableValue("bebeNourri", 1);
+                game.setVariableValue("bebeAffame", 0);
+                
                 game.audio.load("gamedata/sounds/baby-drink.mp3", function (buffer) {
-                    source = game.audio.play(buffer, 0.5);
+                    source = game.audio.play(buffer, 0.25);
                     source.addEventListener("ended", function () {
-                        game.setVariableValue("bebeNourri", 1);
-                        game.setVariableValue("bebeAffame", 0);
+                        
                         updatePleurs();
                         
                         game.audio.load("gamedata/sounds/baby-burp.mp3", function (buffer) {
@@ -721,10 +725,11 @@ initGameChap3 = function(canvas) {
         }
             
         if (game.getVariableValue("poudreOK") == 1) {
+            game.setVariableValue("laitOK", 1);
             game.audio.load("gamedata/sounds/fill-bottle-full.mp3", function (buffer) {
                 source = game.audio.play(buffer);
                 source.addEventListener("ended", function () {
-                    game.setVariableValue("laitOK", 1);
+                    
                     game.removeAllMessages();
                     game.messagesToDisplay.push(new Message("The milk is ready. I now need to warm it.", COLOR_PERSO, -1, -1, -1));
                     game.displayMessages(); 
@@ -775,7 +780,7 @@ initGameChap3 = function(canvas) {
  
     
     // -- trousse de soins -- //
-    var iaTrousseDeSoins = new InteractiveArea("iaTrousse", "first aid kit", new Point(430, 200), 20);
+    var iaTrousseDeSoins = new InteractiveArea("iaTrousse", "first aid kit", new Point(430, 200), 20, "gamedata/sounds/zip.mp3");
     iaTrousseDeSoins.getOrientation = function() { return "NW"; }
     iaTrousseDeSoins.onLookAt = function() {
         game.removeAllMessages();
@@ -790,15 +795,21 @@ initGameChap3 = function(canvas) {
             game.displayMessages(); 
             return;
         }
-        if (! game.getInventory().containsItem("thermometre")) {
-            game.addItemToInventory("thermometre");   
-        }
-        if (! game.getInventory().containsItem("doliprane")) {
-            game.addItemToInventory("doliprane");   
-        }
-        game.removeAllMessages();
-        game.messagesToDisplay.push(new Message("This can be useful.", COLOR_PERSO, -1, -1, -1));
-        game.displayMessages(); 
+        
+        
+        iaTrousseDeSoins.playAudio(function () {
+            if (! game.getInventory().containsItem("thermometre")) {
+                game.addItemToInventory("thermometre");   
+            }
+            if (! game.getInventory().containsItem("doliprane")) {
+                game.addItemToInventory("doliprane");   
+            }
+            game.removeAllMessages();
+            game.messagesToDisplay.push(new Message("This can be useful.", COLOR_PERSO, -1, -1, -1));
+            game.displayMessages(); 
+        });
+        
+        
     }
     iaTrousseDeSoins.onUseWith = function() {
         if (game.getSelectedObject().id == "doliprane" || game.getSelectedObject().id == "thermometre") {
@@ -806,6 +817,7 @@ initGameChap3 = function(canvas) {
             game.removeAllMessages();
             game.messagesToDisplay.push(new Message("Back to where it belongs.", COLOR_PERSO, -1, -1, -1));
             game.displayMessages(); 
+            iaTrousseDeSoins.playAudio();
             return;
         }
         game.removeAllMessages();
@@ -876,7 +888,13 @@ initGameChap3 = function(canvas) {
     }
     bouteilleEau.getActionWord = function() { return "Pick"; }
     bouteilleEau.onUseInScene = function() {
-        game.addItemToInventory("bouteilleEau");   
+        game.audio.load("gamedata/sounds/bottle-off-the-table.mp3", function (buffer) {
+            source = game.audio.play(buffer, 0.65);
+            source.addEventListener("ended", function () {
+                game.addItemToInventory("bouteilleEau");   
+            });
+        });
+        
     }
     game.allObjects["bouteilleEau"] = bouteilleEau;
     ch3cuisine.addObject(bouteilleEau);
@@ -896,7 +914,7 @@ initGameChap3 = function(canvas) {
             game.displayMessages();           
             return;
         }
-        
+        game.setVariableValue("poudreOK", 1);
         game.audio.load("gamedata/sounds/bottle-powder.mp3", function (bufferPowder) {
             game.audio.load("gamedata/sounds/bottle-spoon.mp3", function (bufferSpoon) {
                 
@@ -909,7 +927,7 @@ initGameChap3 = function(canvas) {
                 
                 source.addEventListener("ended", function () {
                 
-                    game.setVariableValue("poudreOK", 1);
+                    
                     game.removeAllMessages();
                     game.messagesToDisplay.push(new Message(" ...  ... ... 42. OK. Done.", COLOR_PERSO, -1, -1, -1));
                     game.displayMessages();  
@@ -949,12 +967,13 @@ initGameChap3 = function(canvas) {
             return;
         }
  
+        game.setVariableValue("laitChaud", 1);
         game.audio.load("gamedata/sounds/microwave-cycle-full.mp3", function (buffer) {
             
             source = game.audio.play(buffer);
             source.addEventListener("ended", function () {
 
-                game.setVariableValue("laitChaud", 1);
+                
                 game.removeAllMessages();
                 game.messagesToDisplay.push(new Message("The milk is now warm.", COLOR_PERSO, -1, -1, -1));
                 game.displayMessages();   
