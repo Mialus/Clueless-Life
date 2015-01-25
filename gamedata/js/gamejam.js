@@ -89,7 +89,7 @@ initGameChap3 = function(canvas) {
         ]
     );
     
-	ch3chambre.addCharacter("perso", new CharacterDisplay("perso", perso, meshChambre(), new Point(902, 527, 1.2), true);
+	ch3chambre.addCharacter("perso", new CharacterDisplay("perso", perso, meshChambre(), new Point(902, 527, 1.2)), true);
     game.addScene(ch3chambre);
 
     // -- couloir -- //
