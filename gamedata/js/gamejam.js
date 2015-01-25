@@ -39,7 +39,7 @@ var perso = new Character(imgPerso, arret, movement, null, "gamedata/sounds/foot
 var chapters = [ 
 	
     // chapitre 3
-    { "splashScreen" : "./gamedata/images/3/chaptre3.jpg",
+    { "splashScreen" : "./gamedata/images/chapitre3.jpg",
       "title" : "Clueless parents",
       "after" : function() {
           game.audio.load("gamedata/sounds/atmo-thunder-rain.mp3", function (buffer) {
@@ -1115,7 +1115,7 @@ initGameChap3 = function(canvas) {
     }
 
     // debug
-    /*alert("doudouPerdu = " + game.getVariableValue("doudouPerdu") + ", tetinePerdue = " + game.getVariableValue("tetinePerdue") + ", temperatureElevee = " + game.getVariableValue("temperatureElevee") + ", bebeAffame = " +  game.getVariableValue("bebeAffame") + ", couchePleine = " + game.getVariableValue("couchePleine"));*/
+    console.log("doudouPerdu = " + game.getVariableValue("doudouPerdu") + ", tetinePerdue = " + game.getVariableValue("tetinePerdue") + ", temperatureElevee = " + game.getVariableValue("temperatureElevee") + ", bebeAffame = " +  game.getVariableValue("bebeAffame") + ", couchePleine = " + game.getVariableValue("couchePleine"));
 }
 
 
