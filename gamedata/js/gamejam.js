@@ -230,7 +230,7 @@ initGameChap3 = function(canvas) {
     /**** CHAMBRE DE BEBE ***/
     
     // -- paquet de couches -- //  
-    var iaPaquetCouches = new InteractiveArea("iaPaquetCouches", "the diapers", new Point(880, 277), 10, "gamedata/sounds/take-diaper.mp3");
+    var iaPaquetCouches = new InteractiveArea("iaPaquetCouches", "the diapers", new Point(770, 301), 10, "gamedata/sounds/take-diaper.mp3");
     iaPaquetCouches.onLookAt = function() {
 		game.removeAllMessages();
 		game.messagesToDisplay.push(new Message("This a pile of diapers.", COLOR_PERSO, -1, -1, -1));
@@ -278,7 +278,7 @@ initGameChap3 = function(canvas) {
     ch3chambre.addInteractiveArea(iaTableALanger);
     
     // -- table à langer -- //
-    var iaBebeALanger = new Item("bebe", "baby", "./gamedata/images/bebe.png", 830, 190, "./gamedata/images/bebe.png");
+    var iaBebeALanger = new Item("bebe", "baby", "./gamedata/images/bebe.png", 760, 230, "./gamedata/images/bebe.png");
     iaBebeALanger.isVisible = function() {
         return game.getVariableValue("bebeSurTable") == 1;   
     }
@@ -447,7 +447,7 @@ initGameChap3 = function(canvas) {
     ch3chambre.addObject(iaBebeALanger);
     
     // -- berceau avec bébé -- //
-    var iaBebeBerceau = new InteractiveArea("iaBebeBerceau", "the baby in cradle", new Point(664, 321), 50);
+    var iaBebeBerceau = new InteractiveArea("iaBebeBerceau", "the baby in cradle", new Point(520, 350), 60);
     iaBebeBerceau.isVisible = function() {
         return game.getVariableValue("bebePris") == 0 && game.getVariableValue("bebeSurTable") == 0;   
     }
@@ -470,6 +470,7 @@ initGameChap3 = function(canvas) {
     iaBebeBerceau.onUse = function() {
         game.addItemToInventory("bebe");
         game.setVariableValue("bebePris", 1);
+        game.getCurrentScene().redraw();
         
         game.getCurrentScene().stop();
         ch3chambre.playAudio = false;
@@ -535,16 +536,16 @@ initGameChap3 = function(canvas) {
 
 
     // -- berceau vide -- //
-    var iaBerceauVide = new InteractiveArea("iaBerceauVide", "the empty cradle", new Point(664, 321), 50);
+    var iaBerceauVide = new Item("iaBerceauVide", "the empty cradle", "./gamedata/images/berceauVide.png", 460, 254, "./gamedata/images/berceauVide.png");
     iaBerceauVide.isVisible = function() {
         return game.getVariableValue("bebePris") == 1 || game.getVariableValue("bebeSurTable") == 1;   
     }
-    iaBerceauVide.onLookAt = function() {
+    iaBerceauVide.onLookAtInScene = function() {
         game.removeAllMessages();
         game.messagesToDisplay.push(new Message("The cradle is empty.", COLOR_JORIS, -1, -1, -1));	
         game.displayMessages();
     }
-    iaBerceauVide.onUseWith = function(o) {
+    iaBerceauVide.onUseWithInScene = function(o) {
         if (game.getSelectedObject().id == "bebe") {
             game.removeItemFromInventory("bebe");
             game.setVariableValue("bebePris", 0);
@@ -576,7 +577,7 @@ initGameChap3 = function(canvas) {
         game.displayMessages();
     }
     
-    ch3chambre.addInteractiveArea(iaBerceauVide);
+    ch3chambre.addObject(iaBerceauVide);
 
 
                                             
@@ -650,7 +651,7 @@ initGameChap3 = function(canvas) {
     ch3chambre.addInteractiveArea(iaLingettes);
     
     // poubelle
-    var iaPoubelle = new InteractiveArea("iaPoubelle", "the bin", new Point(960, 387), 50, "gamedata/sounds/throw-away-diaper.mp3");
+    var iaPoubelle = new InteractiveArea("iaPoubelle", "the bin", new Point(846, 379), 50, "gamedata/sounds/throw-away-diaper.mp3");
     iaPoubelle.onLookAt = function() {
         game.removeAllMessages();
         game.messagesToDisplay.push(new Message("Smells like teen spirit.", COLOR_PERSO, -1, -1, -1));
@@ -683,7 +684,7 @@ initGameChap3 = function(canvas) {
     
     
     // biberon 
-    var biberon = new Item("biberon", "baby's bottle", "./gamedata/images/biberonInScene.png", 182, 156, "./gamedata/images/biberonInInventory.png");
+    var biberon = new Item("biberon", "baby's bottle", "./gamedata/images/biberonInScene.png", 145, 228, "./gamedata/images/biberonInInventory.png");
     biberon.getOrientation = function() { return "NW"; }
     biberon.onLookAtInScene = function() {
         game.removeAllMessages();
@@ -761,7 +762,7 @@ initGameChap3 = function(canvas) {
     ch3chambre.addObject(biberon);
     
     
-    var doudou = new Item("doudou", "the cuddly toy", "./gamedata/images/doudouInScene.png", 483, 366, "./gamedata/images/doudou.png");
+    var doudou = new Item("doudou", "the cuddly toy", "./gamedata/images/doudouInScene.png", 330, 410, "./gamedata/images/doudou.png");
     doudou.isVisible = function() {
         return !game.getInventory().containsItem("doudou") && game.getVariableValue("doudouTrouve") == 0;   
     }
@@ -1171,29 +1172,21 @@ meshChambre = function() { // TODO check
 
 	var m = new Mesh();
 	
-	var pGauche = new Point(70, 460, 1.2);
-	var pEtagere = new Point(198, 415, 1.1);
-	var pCoffre = new Point(311, 400, 1.1);
-	var pArmoire = new Point(446, 370, 1);
-    var pTapis = new Point(350, 440, 1.2);
-	var pEnFace = new Point(499, 448, 1.2);
-	var pDroite = new Point(756, 454, 1.2);
-	var pBerceau = new Point(735, 405, 1.05);
-    var pTableLanger = new Point(832, 402, 1.1);
+	var pGauche = new Point(150, 487, 1.2);
+	var pEtagere = new Point(203, 431, 1.2);
+	var pEnFace = new Point(653, 495, 1.2);
+	var pDroite = new Point(902, 527, 1.2);
+	var pBerceau = new Point(624, 390, 1.1);
+    var pTableLanger = new Point(700, 390, 1.1);
     
 	m.addSegment(new Segment(pGauche, pEtagere, 0.9));
-	m.addSegment(new Segment(pEtagere, pCoffre, 0.9));
-	m.addSegment(new Segment(pArmoire, pCoffre, 0.9));
-	m.addSegment(new Segment(pArmoire, pTapis, 0.9));
-	m.addSegment(new Segment(pCoffre, pTapis, 0.9));
-	m.addSegment(new Segment(pEtagere, pTapis, 0.9));
-	m.addSegment(new Segment(pGauche, pTapis, 0.9));
-	m.addSegment(new Segment(pArmoire, pEnFace, 0.9));
-    m.addSegment(new Segment(pTapis, pEnFace, 0.9));
+	m.addSegment(new Segment(pEtagere, pEnFace, 0.9));
+    m.addSegment(new Segment(pGauche, pEnFace, 0.9));
     m.addSegment(new Segment(pDroite, pEnFace, 0.9));
-    m.addSegment(new Segment(pDroite, pBerceau, 0.9));
+    m.addSegment(new Segment(pEnFace, pBerceau, 0.9));
+    m.addSegment(new Segment(pEnFace, pTableLanger, 0.9));
     m.addSegment(new Segment(pTableLanger, pBerceau, 0.9));
-    m.addSegment(new Segment(pTableLanger, pDroite, 0.9));
+    
     
     return m;
 }
