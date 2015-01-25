@@ -88,7 +88,7 @@ initGameChap3 = function(canvas) {
 
     
 	// --- Scene Chambre ---- //
-	var ch3chambre = new Scene("ch3-chambre", "the baby's bedroom", canvas, "gamedata/images/chambreEnfant_couleur1.jpg", 
+	var ch3chambre = new Scene("ch3-chambre", "the baby's bedroom", canvas, "gamedata/images/chambre.jpg", 
         [
             {uri: "gamedata/sounds/cries-01.mp3", volume: 0.5},
             {uri: "gamedata/sounds/cries-02.mp3", volume: 0.5},
