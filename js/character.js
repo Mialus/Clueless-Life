@@ -418,7 +418,7 @@ function CharacterDisplay(_chId, _charObj, _charMesh, _defaultPosition) {
 	this.drawCharacter = function(context, OFFSET_X, OFFSET_Y) {
 
 		// display of the mesh (comment to remove)
-		charMesh.display(context, OFFSET_X, OFFSET_Y);		
+		//charMesh.display(context, OFFSET_X, OFFSET_Y);		
 		
 		// display of the character
 		if (targetPoint.length > 0) {

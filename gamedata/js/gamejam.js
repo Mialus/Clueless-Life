@@ -617,7 +617,7 @@ initGameChap3 = function(canvas) {
 	}
     game.allObjects["lingette"] = lingette;
 
-    var iaLingettes = new InteractiveArea("iaLingettes", "the baby-wipers", new Point(837, 266), 20, "gamedata/sounds/take-wipe.mp3");
+    var iaLingettes = new InteractiveArea("iaLingettes", "the baby-wipers", new Point(53, 434), 20, "gamedata/sounds/take-wipe.mp3");
     iaLingettes.onLookAt = function() {
 		game.removeAllMessages();
 		game.messagesToDisplay.push(new Message("This a pack of baby-wipers.", COLOR_PERSO, -1, -1, -1));
