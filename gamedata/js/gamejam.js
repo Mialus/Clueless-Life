@@ -788,8 +788,10 @@ initGameChap3 = function(canvas) {
  
     
     // -- trousse de soins -- //
-    var iaTrousseDeSoins = new InteractiveArea("iaTrousse", "first aid kit", new Point(430, 200), 20, "gamedata/sounds/zip.mp3");
-    iaTrousseDeSoins.getOrientation = function() { return "NW"; }
+    var iaTrousseDeSoins = new InteractiveArea("iaTrousse", "first aid kit", new Point(520, 220), 20, "gamedata/sounds/zip.mp3");
+    iaTrousseDeSoins.getOrientation = function() { return "W"; }
+    iaTrousseDeSoins.isVisible = function() { return game.getVariableValue("couloirAllume") == 1; }
+    iaTrousseDeSoins.getClosestPoint = function() { return new Point(588, 454, 1.2); }
     iaTrousseDeSoins.onLookAt = function() {
         game.removeAllMessages();
         game.messagesToDisplay.push(new Message("This first aid kit contains everything to diagnose and treat small injuries.", COLOR_PERSO, -1, -1, -1));
@@ -832,7 +834,7 @@ initGameChap3 = function(canvas) {
         game.messagesToDisplay.push(new Message("No, I can't put that here.", COLOR_PERSO, -1, -1, -1));
         game.displayMessages(); 
     }
-    ch3chambre.addInteractiveArea(iaTrousseDeSoins);
+    ch3couloir.addInteractiveArea(iaTrousseDeSoins);
     
     // -- thermometre -- //
     var thermometre = new Item("thermometre", "the thermometer", null, 0, 0, "./gamedata/images/thermometre.png");
@@ -1150,11 +1152,14 @@ meshCouloir = function() {
     var m = new Mesh();
     
     var pChambre1 = new Point(600, 260, 0.3);
-    var pChambre2 = new Point(661, 357, 0.8);
-    var pSortie = new Point(727, 465, 1.2);
+    var pChambre2 = new Point(631, 357, 0.8);
+    var pEtagere = new Point(588, 454, 1.2);
+    var pSortie = new Point(707, 465, 1.2);
     
     m.addSegment(new Segment(pChambre1, pChambre2, 0.3));
     m.addSegment(new Segment(pChambre2, pSortie, 0.8));
+    m.addSegment(new Segment(pEtagere, pSortie, 0.8));
+    m.addSegment(new Segment(pEtagere, pChambre2, 0.8));
     
     return m;    
 }
