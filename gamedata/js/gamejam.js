@@ -184,13 +184,25 @@ initGameChap3 = function(canvas) {
             plusRien = false;
             game.messagesToDisplay.push(new Message("I need to get rid of this syrup.", COLOR_PERSO, -1, -1, -1));
         }
+        if (game.getInventory().containsItem("biberon") == 1) {
+            plusRien = false;
+            game.messagesToDisplay.push(new Message("I need to get rid of the baby bottle.", COLOR_PERSO, -1, -1, -1));
+        }
         if (game.getInventory().containsItem("thermometer") == 1) {
             plusRien = false;
             game.messagesToDisplay.push(new Message("I need to get rid of this thermometer.", COLOR_PERSO, -1, -1, -1));
         }
-        if (game.getInventory().containsItem("thermometer") == 1) {
+        if (game.getInventory().containsItem("coucheSale") == 1) {
             plusRien = false;
             game.messagesToDisplay.push(new Message("I can't go to bed with a dirty diaper.", COLOR_PERSO, -1, -1, -1));
+        }
+        if (game.getInventory().containsItem("couchePropre") == 1) {
+            plusRien = false;
+            game.messagesToDisplay.push(new Message("I can't go to bed with a diaper. Even a clean one.", COLOR_PERSO, -1, -1, -1));
+        }
+        if (game.getInventory().containsItem("lingette") == 1) {
+            plusRien = false;
+            game.messagesToDisplay.push(new Message("I can't go to bed with a wiper.", COLOR_PERSO, -1, -1, -1));
         }
         if (game.getInventory().containsItem("doudou") == 1) {
             plusRien = false;
@@ -291,8 +303,8 @@ initGameChap3 = function(canvas) {
         if ((game.getSelectedObject().id == "lingette" || game.getSelectedObject().id == "couchePropre") && 
                 game.getInventory().containsItem("couchePropre") && game.getInventory().containsItem("lingette")) {
             
-            game.removeItemFromInventory("couchePropre");
             game.removeItemFromInventory("lingette");
+            game.setVariableValue("bebeChange", 1);
             
             game.audio.load("gamedata/sounds/clean-bottom-back-02.mp3", function (buffer) {
                 source = game.audio.play(buffer);
@@ -306,12 +318,19 @@ initGameChap3 = function(canvas) {
                             });
                         });
                     });
-                    
-                    game.addItemToInventory("coucheSale");
+            
+                    game.removeAllMessages();                                        
+                    if (game.getVariableValue("couchePleine") == 1) {
+                        game.addItemToInventory("coucheSale");
+                        game.removeItemFromInventory("couchePropre");
+                        game.messagesToDisplay.push(new Message("You should feel better now.", COLOR_JORIS, -1, -1, -1));	
+                    }
+                    else {
+                        game.messagesToDisplay.push(new Message("The diaper was clean. But still I changed it.", COLOR_JORIS, -1, -1, -1));	
+                        game.messagesToDisplay.push(new Message("It need to trash the old one.", COLOR_JORIS, -1, -1, -1));	
+                    }
                     game.setVariableValue("couchePleine", 0);
                     updatePleurs();
-                    game.removeAllMessages();                    
-                    game.messagesToDisplay.push(new Message("You should feel better now.", COLOR_JORIS, -1, -1, -1));	
                     game.displayMessages();
                 });
             });
@@ -324,11 +343,23 @@ initGameChap3 = function(canvas) {
             game.displayMessages();
             return;
         }        
+        if (game.getSelectedObject().id == "tetine") {
+            game.removeAllMessages();
+            game.messagesToDisplay.push(new Message("There you go.", COLOR_JORIS, -1, -1, -1));	
+            game.displayMessages();
+            game.removeItemFromInventory("tetine");
+            game.setVariableValue("tetineTrouvee", 1);
+            game.setVariableValue("tetinePerdue", 0);
+            updatePleurs();
+            return;
+        }        
         if (game.getSelectedObject().id == "doliprane") {
             if (game.getVariableValue("temperatureElevee") == 1) {
                 game.removeAllMessages();
                 game.messagesToDisplay.push(new Message("He should feel better now.", COLOR_JORIS, -1, -1, -1));	
                 game.displayMessages();
+                game.setVariableValue("temperatureElevee", 0);
+                updatePleurs();
                 return;
             }
             game.removeAllMessages();
@@ -363,6 +394,16 @@ initGameChap3 = function(canvas) {
             }
             return;
         }
+        if (game.getSelectedObject().id == "tetine") {
+            game.removeAllMessages();
+            game.messagesToDisplay.push(new Message("There you go.", COLOR_JORIS, -1, -1, -1));	
+            game.displayMessages();
+            game.setVariableValue("tetineTrouvee", 1);
+            game.setVariableValue("tetinePerdue", 0);
+            updatePleurs();
+            return;
+        }        
+
         if (game.getSelectedObject().id == "thermometre") {
             game.removeAllMessages();
             game.messagesToDisplay.push(new Message("I can not do that when I hold the baby.", COLOR_JORIS, -1, -1, -1));	
@@ -428,6 +469,16 @@ initGameChap3 = function(canvas) {
             game.removeAllMessages();
             game.messagesToDisplay.push(new Message("I can not do that when the baby is in the bed.", COLOR_JORIS, -1, -1, -1));	
             game.displayMessages();
+            return;
+        }        
+        if (game.getSelectedObject().id == "tetine") {
+            game.removeAllMessages();
+            game.messagesToDisplay.push(new Message("There you go.", COLOR_JORIS, -1, -1, -1));	
+            game.displayMessages();
+            game.removeItemFromInventory("tetine");
+            game.setVariableValue("tetineTrouvee", 1);
+            game.setVariableValue("tetinePerdue", 0);
+            updatePleurs();
             return;
         }        
         game.removeAllMessages();
@@ -560,12 +611,13 @@ initGameChap3 = function(canvas) {
         game.displayMessages();       
     }
     iaPoubelle.onUseWith = function() {
-        if (game.getSelectedObject().id == "coucheSale") {
-            game.removeItemFromInventory("coucheSale");
+        if (game.getSelectedObject().id == "coucheSale" || 
+                game.getSelectedObject().id == "couchePropre" || 
+                game.getSelectedObject().id == "lingette") {
             game.removeAllMessages();
-            game.messagesToDisplay.push(new Message("Farewell dirty diaper.", COLOR_PERSO, -1, -1, -1));
+            game.messagesToDisplay.push(new Message("Farewell " + game.getSelectedObject().getDescription() + ".", COLOR_PERSO, -1, -1, -1));
+            game.removeItemFromInventory(game.getSelectedObject().id);
             game.displayMessages();   
-            game.setVariableValue("bebeChange", 1);
             
             iaPoubelle.playAudio(function () {
                 game.audio.load("gamedata/sounds/close-bin.mp3", function (buffer) {
@@ -851,6 +903,21 @@ initGameChap3 = function(canvas) {
     ch3cuisine.addInteractiveArea(iaRobinet);
     
     
+    // tetine
+    var tetine = new Item("tetine", "the dummy", "./gamedata/images/tetineInScene.png", 894, 326, "./gamedata/images/tetineInInventory.png");
+    tetine.getOrientation = function() { return "N"; }
+    tetine.getActionWord = function() { return "Pick"; }
+    tetine.isVisible = function() { return !game.getInventory().containsItem("tetine") || game.getVariableValue("tetineTrouvee") == 1; }
+    tetine.onLookAtInScene = tetine.onLookAtInInventory = function() {
+        game.removeAllMessages();
+        game.messagesToDisplay.push(new Message("This is the baby's dummy. An efficient pacifier.", COLOR_PERSO, -1, -1, -1));
+        game.displayMessages();           
+    }
+    tetine.onUseInScene = function() {
+        game.addItemToInventory("tetine");           
+    }
+    game.allObjects["tetine"] = tetine;
+    ch3cuisine.addObject(tetine);
     
     
     
@@ -881,25 +948,28 @@ initGameChap3 = function(canvas) {
     game.setVariableValue("laitChaud", 0);
     game.setVariableValue("bebeNourri", 0);
     game.setVariableValue("doudouTrouve", 0);
+    game.setVariableValue("tetineTrouvee", 0);
 
     // enigmes
     game.setVariableValue("doudouPerdu", 0);
     game.setVariableValue("temperatureElevee", 0);
     game.setVariableValue("bebeAffame", 0);
     game.setVariableValue("couchePleine", 0);
+    game.setVariableValue("tetinePerdue", 0);
     
-    for (var i=0; i < 4; i++) {
+    for (var i=0; i < 5; i++) {
         var variable = "couchePleine";
         switch (Math.floor(Math.random()*4)) {
             case 0: variable = "doudouPerdu"; break;
             case 1: variable = "temperatureElevee"; break;
             case 2: variable = "bebeAffame"; break;
+            case 3: variable = "tetinePerdue"; break;
         }
         game.setVariableValue(variable, 1);
     }
 
     // debug
-    alert("doudouPerdu = " + game.getVariableValue("doudouPerdu") + ", temperatureElevee = " + game.getVariableValue("temperatureElevee") + ", bebeAffame = " +  game.getVariableValue("bebeAffame") + ", couchePleine = " + game.getVariableValue("couchePleine"));
+    alert("doudouPerdu = " + game.getVariableValue("doudouPerdu") + ", tetinePerdue = " + game.getVariableValue("tetinePerdue") + ", temperatureElevee = " + game.getVariableValue("temperatureElevee") + ", bebeAffame = " +  game.getVariableValue("bebeAffame") + ", couchePleine = " + game.getVariableValue("couchePleine"));
 }
 
 
