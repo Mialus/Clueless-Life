@@ -178,7 +178,7 @@ initGameChap3 = function(canvas) {
             plusRien = false;
             game.messagesToDisplay.push(new Message("I need to get rid of the baby bottle.", COLOR_PERSO, -1, -1, -1));
         }
-        if (game.getInventory().containsItem("thermometer") == 1) {
+        if (game.getInventory().containsItem("thermometre") == 1) {
             plusRien = false;
             game.messagesToDisplay.push(new Message("I need to get rid of this thermometer.", COLOR_PERSO, -1, -1, -1));
         }
