@@ -421,6 +421,13 @@ initGameChap3 = function(canvas) {
             game.displayMessages();
             game.setVariableValue("tetineTrouvee", 1);
             game.setVariableValue("tetinePerdue", 0);
+            game.removeItemFromInventory("tetine");
+            game.audio.stop(babyIsBabling);
+            babyIsBabling = false;
+            game.audio.load("gamedata/sounds/baby-dummy.mp3", function (buffer) {
+                source = game.audio.play(buffer);
+                source.addEventListener("ended", function () { bable(); });
+            });
             updatePleurs();
             return;
         }        
@@ -482,10 +489,18 @@ initGameChap3 = function(canvas) {
             game.removeAllMessages();
             game.messagesToDisplay.push(new Message("Welcome home.", COLOR_JORIS, -1, -1, -1));	
             game.displayMessages();
-            game.removeItemFromInventory("doudou");
             game.setVariableValue("doudouTrouve", 1);
             game.setVariableValue("doudouPerdu", 0);
             updatePleurs();
+            game.getCurrentScene().stop();
+            game.audio.load("gamedata/sounds/babling-02.mp3", function (buffer) {
+                source = game.audio.play(buffer, 0.25);
+                source.addEventListener("ended", function () {
+                    game.getCurrentScene().startAudio(); 
+                });
+            });
+            game.removeItemFromInventory("doudou");
+            
             return;
         }
         if (game.getSelectedObject().id == "thermometre" || game.getSelectedObject().id == "doliprane") {
@@ -498,10 +513,18 @@ initGameChap3 = function(canvas) {
             game.removeAllMessages();
             game.messagesToDisplay.push(new Message("There you go.", COLOR_JORIS, -1, -1, -1));	
             game.displayMessages();
-            game.removeItemFromInventory("tetine");
             game.setVariableValue("tetineTrouvee", 1);
             game.setVariableValue("tetinePerdue", 0);
             updatePleurs();
+            game.getCurrentScene().stop();
+            game.audio.load("gamedata/sounds/baby-dummy.mp3", function (buffer) {
+                source = game.audio.play(buffer);
+                source.addEventListener("ended", function () {
+                    game.getCurrentScene().startAudio(); 
+                });
+            });
+            game.removeItemFromInventory("tetine");
+            
             return;
         }        
         game.removeAllMessages();

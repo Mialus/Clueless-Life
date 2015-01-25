@@ -501,7 +501,7 @@ function Scene(_name, _desc, _cvs, _bg, _ambients) {
     
     this.startAudio = function () {
     
-        if (ambientSounds && ambientSounds.length > 0) {
+        if (ambientSounds && ambientSounds.length > 0 && game.getVariableValue("bebePleure") == 1) {
             game.audio.play(ambientSounds[0].buffer, ambientSounds[0].volume, ambientSounds);
         }
     
