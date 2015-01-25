@@ -646,10 +646,16 @@ initGameChap3 = function(canvas) {
         }
             
         if (game.getVariableValue("poudreOK") == 1) {
-            game.setVariableValue("laitOK", 1);
-            game.removeAllMessages();
-            game.messagesToDisplay.push(new Message("The milk is ready. I now need to warm it.", COLOR_PERSO, -1, -1, -1));
-            game.displayMessages(); 
+            game.audio.load("gamedata/sounds/fill-bottle-full.mp3", function (buffer) {
+                source = game.audio.play(buffer);
+                source.addEventListener("ended", function () {
+                    game.setVariableValue("laitOK", 1);
+                    game.removeAllMessages();
+                    game.messagesToDisplay.push(new Message("The milk is ready. I now need to warm it.", COLOR_PERSO, -1, -1, -1));
+                    game.displayMessages(); 
+                });
+            });
+            
             return;
         }
         game.removeAllMessages();
@@ -808,10 +814,29 @@ initGameChap3 = function(canvas) {
             game.displayMessages();           
             return;
         }
-        game.setVariableValue("poudreOK", 1);
-        game.removeAllMessages();
-        game.messagesToDisplay.push(new Message("OK. Done.", COLOR_PERSO, -1, -1, -1));
-        game.displayMessages();           
+        
+        game.audio.load("gamedata/sounds/bottle-powder.mp3", function (bufferPowder) {
+            game.audio.load("gamedata/sounds/bottle-spoon.mp3", function (bufferSpoon) {
+                
+                game.messagesToDisplay.push(new Message("1 ... 2 ... 3 ... 4 ...", COLOR_PERSO, -1, -1, -1));
+                
+                game.displayMessages();  
+                
+                game.audio.play(bufferPowder, 2.0);
+                source = game.audio.play(bufferSpoon);
+                
+                source.addEventListener("ended", function () {
+                
+                    game.setVariableValue("poudreOK", 1);
+                    game.removeAllMessages();
+                    game.messagesToDisplay.push(new Message(" ...  ... ... 42. OK. Done.", COLOR_PERSO, -1, -1, -1));
+                    game.displayMessages();  
+                    
+                });
+                
+            });
+        });
+                 
     }
     game.allObjects["poudreLait"] = poudreLait;
     ch3cuisine.addObject(poudreLait);
@@ -841,10 +866,22 @@ initGameChap3 = function(canvas) {
             game.displayMessages();           
             return;
         }
-        game.setVariableValue("laitChaud", 1);
-        game.removeAllMessages();
-        game.messagesToDisplay.push(new Message("The milk is now warm.", COLOR_PERSO, -1, -1, -1));
-        game.displayMessages();           
+        
+        game.audio.load("gamedata/sounds/microwave-cycle-full.mp3", function (buffer) {
+            
+            source = game.audio.play(buffer);
+            source.addEventListener("ended", function () {
+
+                game.setVariableValue("laitChaud", 1);
+                game.removeAllMessages();
+                game.messagesToDisplay.push(new Message("The milk is now warm.", COLOR_PERSO, -1, -1, -1));
+                game.displayMessages();   
+
+            });
+            
+        });
+        
+                
     }
     ch3cuisine.addInteractiveArea(iaMicroOndes);
     
