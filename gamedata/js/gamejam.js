@@ -877,7 +877,10 @@ initGameChap3 = function(canvas) {
         }
         game.setVariableValue("laitChaud", 1);
         game.removeAllMessages();
-        game.messagesToDisplay.push(new Message("The milk is now warm.", COLOR_PERSO, -1, -1, -1));
+        game.messagesToDisplay.push(new Message("What do we do now?", COLOR_PERSO, -1, -1, -1));
+        game.messagesToDisplay.push(new Message("Maybe, finally, we just have to wait.", COLOR_PERSO, -1, -1, -1));
+        game.messagesToDisplay.push(new Message("Wait for the milk...", COLOR_PERSO, -1, -1, -1));
+        game.messagesToDisplay.push(new Message("... to be warm.", COLOR_PERSO, -1, -1, -1));
         game.displayMessages();           
     }
     ch3cuisine.addInteractiveArea(iaMicroOndes);
