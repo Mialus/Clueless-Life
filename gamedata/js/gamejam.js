@@ -211,8 +211,16 @@ initGameChap3 = function(canvas) {
 		game.messagesToDisplay.push(new Message("Maybe Mummy is not sleeping anymore...", COLOR_PERSO, -1, -1, -1));
 		game.displayMessages();
         
-        // TODO END GAME
-        
+        setTimeout(function ()  {
+            var splashScreen = document.getElementById("bcSplashScreen");
+            splashScreen.style.background = "black url(gamedata/images/game-over.png) no-repeat center 50px";
+            splashScreen.style.display = "block";
+
+            document.getElementById("gamearea").style.display = "none";	
+            
+            splashScreen.innerHTML = '<div id="btnDemarrer" onclick="window.location.reload();">Restart</div>'
+            
+        }, 6500);
     }
     ch3couloir.addInteractiveArea(iaChambreParents);
     
@@ -1115,7 +1123,7 @@ initGameChap3 = function(canvas) {
     }
 
     // debug
-    console.log("doudouPerdu = " + game.getVariableValue("doudouPerdu") + ", tetinePerdue = " + game.getVariableValue("tetinePerdue") + ", temperatureElevee = " + game.getVariableValue("temperatureElevee") + ", bebeAffame = " +  game.getVariableValue("bebeAffame") + ", couchePleine = " + game.getVariableValue("couchePleine"));
+   /* console.log("doudouPerdu = " + game.getVariableValue("doudouPerdu") + ", tetinePerdue = " + game.getVariableValue("tetinePerdue") + ", temperatureElevee = " + game.getVariableValue("temperatureElevee") + ", bebeAffame = " +  game.getVariableValue("bebeAffame") + ", couchePleine = " + game.getVariableValue("couchePleine"));*/
 }
 
 
