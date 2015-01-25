@@ -89,7 +89,7 @@ initGameChap3 = function(canvas) {
         ]
     );
     
-	ch3chambre.addCharacter("perso", new CharacterDisplay("perso", perso, meshChambre(), new Point(70, 460, 1.2)), true);
+	ch3chambre.addCharacter("perso", new CharacterDisplay("perso", perso, meshChambre(), new Point(902, 527, 1.2), true);
     game.addScene(ch3chambre);
 
     // -- couloir -- //
@@ -104,7 +104,7 @@ initGameChap3 = function(canvas) {
         ]
     );
     ch3couloir.setDarkness(0.05);
-    ch3couloir.addCharacter("perso", new CharacterDisplay("perso", perso, meshCouloir(), new Point(602, 476, 1.2)), true);
+    ch3couloir.addCharacter("perso", new CharacterDisplay("perso", perso, meshCouloir(), new Point(600, 260, 0.3)), true);
     game.addScene(ch3couloir);
     
     // -- Scene Cuisine --//
@@ -117,7 +117,7 @@ initGameChap3 = function(canvas) {
             {uri: "gamedata/sounds/far-cries-05.mp3", volume: 0.05},
             {uri: "gamedata/sounds/far-scream-01.mp3", volume: 0.05}
     ]);
-	ch3cuisine.addCharacter("perso", new CharacterDisplay("perso", perso, meshCuisine(), new Point(982, 580, 1.3)), true);
+	ch3cuisine.addCharacter("perso", new CharacterDisplay("perso", perso, meshCuisine(), new Point(91, 426, 1.2)), true);
     game.addScene(ch3cuisine);
     
 
