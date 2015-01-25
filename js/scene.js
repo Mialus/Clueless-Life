@@ -255,7 +255,7 @@ function Scene(_name, _desc, _cvs, _bg, _ambients) {
 		// look for passages (only if the current action is "go to" ie. NO_ACTION)
 		if (game.currentAction == game.NO_ACTION) {
 			for (var i in passages) {
-				if (passages[i].isVisible() && clickedPoint.distanceTo(passages[i].point) < 18) {
+				if (passages[i].isVisible() && clickedPoint.distanceTo(passages[i].point) < 30) {
 					game.onSomething = passages[i];
 					game.updateActionLine();
 					return;
@@ -301,9 +301,9 @@ function Scene(_name, _desc, _cvs, _bg, _ambients) {
 		if (game.currentAction == game.NO_ACTION) {
 			// clicked on a POI --> change scene
 			for (var i in passages) {
-				if (passages[i].isVisible() && clickedPoint.distanceTo(passages[i].point) < 18) {
+				if (passages[i].isVisible() && clickedPoint.distanceTo(passages[i].point) < 30) {
 					var act = new Action("passage", new Passage(passages[i].point.x,passages[i].point.y, passages[i].toScene, passages[i].startingPoint));
-					var dest = characters[playedCharacter].getCharacterMesh().getClosestPointAndSegment(clickedPoint);
+					var dest = characters[playedCharacter].getCharacterMesh().getClosestPointAndSegment(passages[i].getClosestPoint());
 					return { "action" : act, "destination" : dest, "orientation" : passages[i].orientation };
 				}
 			}
@@ -525,6 +525,8 @@ function Passage(_x, _y, _toScene, _startingPoint) {
 
 	/** destination scene */
 	this.toScene = _toScene;
+    
+    this.getClosestPoint = function() { return this.point; }
 	
 	/** starting point of the next scene */
 	this.startingPoint = new Point(_startingPoint.x, _startingPoint.y, _startingPoint.zoom);	

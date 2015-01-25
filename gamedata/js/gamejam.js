@@ -131,19 +131,13 @@ initGameChap3 = function(canvas) {
     game.addScene(ch3cuisine);
     
 
-    // -- poutre (à faire disparaitre pour la version finale -- //
-    var sePoutre = new SceneElement("./gamedata/images/poutre.png", 396, 115);
-	sePoutre.getZIndex = function() { return 8; };
-	ch3couloir.addSceneElement(sePoutre);
-	
-
     // -- Interrupteur du couloir -- //
-    var iaInterrupteur = new InteractiveArea("iaInterrupteur", "the switch", new Point(620, 230), 8, "gamedata/sounds/switch.mp3");
+    var iaInterrupteur = new InteractiveArea("iaInterrupteur", "the switch", new Point(641, 207), 8, "gamedata/sounds/switch.mp3");
     iaInterrupteur.getClosestPoint = function() { 
-        return new Point(583, 411);
+        return new Point(615, 270);
     }
     iaInterrupteur.getOrientation = function() {
-        return "NE";   
+        return "E";   
     }
     iaInterrupteur.onLookAt = function() {
         var msg = game.getVariableValue("couloirAllume") == 1 ? "It's the corridor's switch." : "There is something there, but I can't see what.";
@@ -164,10 +158,7 @@ initGameChap3 = function(canvas) {
     ch3couloir.addInteractiveArea(iaInterrupteur);
     
     // -- chambre des parents --
-    var iaChambreParents = new InteractiveArea("iaChambreParents", "the parent's room", new Point(594, 230), 10);
-    iaChambreParents.getClosestPoint = function() { 
-        return new Point(583, 411);
-    }
+    var iaChambreParents = new InteractiveArea("iaChambreParents", "the parent's room", new Point(615, 210), 10);
     iaChambreParents.getOrientation = function() {
         return "NE";   
     }
@@ -1035,18 +1026,19 @@ initGameChap3 = function(canvas) {
     
     
     /*** passages ***/
-    var paCouloirChambre = new Passage(501, 205, ch3chambre, new Point(70, 460, 1.2));
+    var paCouloirChambre = new Passage(715, 235, ch3chambre, new Point(715, 234, 1.2));
     paCouloirChambre.isVisible = function() { return game.getVariableValue("couloirAllume") == 1; }
+    paCouloirChambre.getClosestPoint = function() { return new Point(661, 357, 0.8); }
     ch3couloir.addPassage(paCouloirChambre);
     
-    var paChambreCouloir = new Passage(46, 461, ch3couloir, new Point(472, 292, 0.5));
+    var paChambreCouloir = new Passage(46, 461, ch3couloir, new Point(661, 357, 0.8));
     paChambreCouloir.isVisible = function() { return game.getVariableValue("bebeSurTable") == 0; }
     ch3chambre.addPassage(paChambreCouloir);
     
-    var paCuisineCouloir = new Passage(970, 575, ch3couloir, new Point(602, 476, 1.2));
+    var paCuisineCouloir = new Passage(40, 280, ch3couloir, new Point(727, 465, 1.2));
     ch3cuisine.addPassage(paCuisineCouloir);
     
-    var paCouloirCuisine = new Passage(602, 476, ch3cuisine, new Point(970, 575, 1.3));
+    var paCouloirCuisine = new Passage(870, 455, ch3cuisine, new Point(91, 426, 1.2));
     paCouloirCuisine.isVisible = function() { return game.getVariableValue("couloirAllume") == 1; }
     ch3couloir.addPassage(paCouloirCuisine);
     
@@ -1121,11 +1113,11 @@ meshCouloir = function() {
  
     var m = new Mesh();
     
-    var pChambre1 = new Point(472, 292, 0.5);
-    var pChambre2 = new Point(519, 381, 1);
-    var pSortie = new Point(602, 476, 1.2);
+    var pChambre1 = new Point(600, 260, 0.3);
+    var pChambre2 = new Point(661, 357, 0.8);
+    var pSortie = new Point(727, 465, 1.2);
     
-    m.addSegment(new Segment(pChambre1, pChambre2, 0.5));
+    m.addSegment(new Segment(pChambre1, pChambre2, 0.3));
     m.addSegment(new Segment(pChambre2, pSortie, 0.8));
     
     return m;    
