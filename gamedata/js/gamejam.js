@@ -441,6 +441,7 @@ initGameChap3 = function(canvas) {
     // -- berceau avec bébé -- //
     var iaBebeBerceau = new InteractiveArea("iaBebeBerceau", "the baby in cradle", new Point(520, 350), 60);
     iaBebeBerceau.getClosestPoint = function() { return new Point(624, 390, 1.1); }
+    iaBebeBerceau.getOrientation = function() { return "W"; }
     iaBebeBerceau.isVisible = function() {
         return game.getVariableValue("bebePris") == 0 && game.getVariableValue("bebeSurTable") == 0;   
     }
@@ -531,7 +532,8 @@ initGameChap3 = function(canvas) {
     // -- berceau vide -- //
     var iaBerceauVide = new Item("iaBerceauVide", "the empty cradle", "./gamedata/images/berceauVide.png", 460, 254, "./gamedata/images/berceauVide.png");
     iaBerceauVide.getClosestPoint = function() { return new Point(624, 390, 1.1); }
-    iaBerceauVide.isVisible = function() {
+    iaBerceauVide.getOrientation = function() { return "W"; }
+   iaBerceauVide.isVisible = function() {
         return game.getVariableValue("bebePris") == 1 || game.getVariableValue("bebeSurTable") == 1;   
     }
     iaBerceauVide.onLookAtInScene = function() {
