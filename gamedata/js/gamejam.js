@@ -438,6 +438,7 @@ initGameChap3 = function(canvas) {
     
     // -- berceau avec bébé -- //
     var iaBebeBerceau = new InteractiveArea("iaBebeBerceau", "the baby in cradle", new Point(520, 350), 60);
+    iaBebeBerceau.getClosestPoint = function() { return new Point(624, 390, 1.1); }
     iaBebeBerceau.isVisible = function() {
         return game.getVariableValue("bebePris") == 0 && game.getVariableValue("bebeSurTable") == 0;   
     }
@@ -527,6 +528,7 @@ initGameChap3 = function(canvas) {
 
     // -- berceau vide -- //
     var iaBerceauVide = new Item("iaBerceauVide", "the empty cradle", "./gamedata/images/berceauVide.png", 460, 254, "./gamedata/images/berceauVide.png");
+    iaBerceauVide.getClosestPoint = function() { return new Point(624, 390, 1.1); }
     iaBerceauVide.isVisible = function() {
         return game.getVariableValue("bebePris") == 1 || game.getVariableValue("bebeSurTable") == 1;   
     }
@@ -539,6 +541,7 @@ initGameChap3 = function(canvas) {
         if (game.getSelectedObject().id == "bebe") {
             game.removeItemFromInventory("bebe");
             game.setVariableValue("bebePris", 0);
+            game.getCurrentScene().redraw();
             
             //TODO stop babyIsBabling start crying if crying baby
             game.audio.stop(babyIsBabling);
