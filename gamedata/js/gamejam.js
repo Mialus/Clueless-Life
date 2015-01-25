@@ -100,14 +100,6 @@ initGameChap3 = function(canvas) {
     );
     
 	ch3chambre.addCharacter("perso", new CharacterDisplay("perso", perso, meshChambre(), new Point(70, 460, 1.2)), true);
-    ch3chambre.onEntry = function() {
-        if (game.getVariableValue("firstVisitInBedroom") == 1) {
-            game.removeAllMessages();
-            game.messagesToDisplay.push(new Message("The boy's crying... What do we do now?", COLOR_PERSO, -1, -1, -1));
-            game.displayMessages();
-            game.setVariableValue("firstVisitInBedroom", 0);
-        }
-    }
     game.addScene(ch3chambre);
 
     // -- couloir -- //
@@ -171,6 +163,65 @@ initGameChap3 = function(canvas) {
     }
     ch3couloir.addInteractiveArea(iaInterrupteur);
     
+    // -- chambre des parents --
+    var iaChambreParents = new InteractiveArea("iaChambreParents", "the parent's room", new Point(594, 230), 10);
+    iaChambreParents.getClosestPoint = function() { 
+        return new Point(583, 411);
+    }
+    iaChambreParents.getOrientation = function() {
+        return "NE";   
+    }
+    iaChambreParents.onLookAt = function() {
+ 		game.removeAllMessages();
+		game.messagesToDisplay.push(new Message("I'd like to go back in there.", COLOR_PERSO, -1, -1, -1));
+		game.displayMessages();
+   }
+    iaChambreParents.onUse = function() {
+ 		if (game.getVariableValue("bebePleure") == 1) {
+            game.removeAllMessages();
+            game.messagesToDisplay.push(new Message("I can't already go back to bed.", COLOR_PERSO, -1, -1, -1));
+            game.messagesToDisplay.push(new Message("I need to find the reason why the baby cries.", COLOR_PERSO, -1, -1, -1));
+            game.messagesToDisplay.push(new Message("And solve it.", COLOR_PERSO, -1, -1, -1));
+            game.messagesToDisplay.push(new Message("Quickly.", COLOR_PERSO, -1, -1, -1));
+            game.displayMessages();
+            return;
+        }
+        game.removeAllMessages();
+        var plusRien = true;
+        if (game.getInventory().containsItem("doliprane") == 1) {
+            plusRien = false;
+            game.messagesToDisplay.push(new Message("I need to get rid of this syrup.", COLOR_PERSO, -1, -1, -1));
+        }
+        if (game.getInventory().containsItem("thermometer") == 1) {
+            plusRien = false;
+            game.messagesToDisplay.push(new Message("I need to get rid of this thermometer.", COLOR_PERSO, -1, -1, -1));
+        }
+        if (game.getInventory().containsItem("thermometer") == 1) {
+            plusRien = false;
+            game.messagesToDisplay.push(new Message("I can't go to bed with a dirty diaper.", COLOR_PERSO, -1, -1, -1));
+        }
+        if (game.getInventory().containsItem("doudou") == 1) {
+            plusRien = false;
+            game.messagesToDisplay.push(new Message("I don't need the baby's cuddle toy.", COLOR_PERSO, -1, -1, -1));
+        }
+        if (! plusRien) {
+            game.displayMessages();
+            return;
+        }
+        if (game.getVariableValue("couloirAllume") == 1) {
+            game.messagesToDisplay.push(new Message("I should first switch off the light.", COLOR_PERSO, -1, -1, -1));
+            game.displayMessages();
+            return;
+        }
+        game.messagesToDisplay.push(new Message("Let's go back to the bedroom.", COLOR_PERSO, -1, -1, -1));
+		game.messagesToDisplay.push(new Message("Maybe Mummy is not sleeping anymore...", COLOR_PERSO, -1, -1, -1));
+		game.displayMessages();
+        
+        // TODO END GAME
+        
+    }
+    ch3couloir.addInteractiveArea(iaChambreParents);
+    
     
     
     /**** CHAMBRE DE BEBE ***/
@@ -230,8 +281,13 @@ initGameChap3 = function(canvas) {
     }
     iaBebeALanger.onLookAtInScene = function()  {
 		game.removeAllMessages();
-		game.messagesToDisplay.push(new Message("I must change his diaper.", COLOR_JORIS, -1, -1, -1));	
-		game.displayMessages();
+        if (game.getVariableValue("bebeChange") == 0) {
+           game.messagesToDisplay.push(new Message("I must change his diaper.", COLOR_JORIS, -1, -1, -1));	
+        }
+        else {
+           game.messagesToDisplay.push(new Message("His diaper has been changed.", COLOR_JORIS, -1, -1, -1));	
+        }
+       game.displayMessages();
     }
     iaBebeALanger.getActionWord = function() { return "Pick"; }
     iaBebeALanger.onUseInScene = function() {
@@ -260,22 +316,50 @@ initGameChap3 = function(canvas) {
                     });
                     
                     game.addItemToInventory("coucheSale");
-                    game.removeAllMessages();
-                    
+                    game.setVariableValue("couchePleine", 0);
+                    updatePleurs();
+                    game.removeAllMessages();                    
                     game.messagesToDisplay.push(new Message("You should feel better now.", COLOR_JORIS, -1, -1, -1));	
                     game.displayMessages();
                 });
             });
             return;
         }
+        if (game.getSelectedObject().id == "thermometre") {
+            var msg = (game.getVariableValue("temperatureElevee") == 0) ? "His temperature is OK." : "His temperature is too high.";
+            game.removeAllMessages();
+            game.messagesToDisplay.push(new Message(msg, COLOR_JORIS, -1, -1, -1));	
+            game.displayMessages();
+            return;
+        }        
+        if (game.getSelectedObject().id == "doliprane") {
+            if (game.getVariableValue("temperatureElevee") == 1) {
+                game.removeAllMessages();
+                game.messagesToDisplay.push(new Message("He should feel better now.", COLOR_JORIS, -1, -1, -1));	
+                game.displayMessages();
+                return;
+            }
+            game.removeAllMessages();
+            game.messagesToDisplay.push(new Message("This is not necessary.", COLOR_JORIS, -1, -1, -1));	
+            game.displayMessages();
+            return;
+        }        
         game.removeAllMessages();
 		game.messagesToDisplay.push(new Message("To change his diaper, I need a new one and some wipes.", COLOR_JORIS, -1, -1, -1));	
 		game.displayMessages();
     }
     iaBebeALanger.onUseWithInInventory = function() {
         if (game.getSelectedObject().id == "biberon") {
+            if (game.getVariableValue("bebeNourri") == 1) {
+                game.removeAllMessages();
+                game.messagesToDisplay.push(new Message("He is already fed.", COLOR_JORIS, -1, -1, -1));	
+                game.displayMessages();
+                return;
+            }
             if (game.getVariableValue("laitChaud") == 1) {
                 game.setVariableValue("bebeNourri", 1);
+                game.setVariableValue("bebeAffame", 0);
+                updatePleurs();
                 game.removeAllMessages();
                 game.messagesToDisplay.push(new Message("Now he is fed.", COLOR_JORIS, -1, -1, -1));	
                 game.displayMessages();
@@ -287,6 +371,13 @@ initGameChap3 = function(canvas) {
             }
             return;
         }
+        if (game.getSelectedObject().id == "thermometre") {
+            game.removeAllMessages();
+            game.messagesToDisplay.push(new Message("I can not do that when I hold the baby.", COLOR_JORIS, -1, -1, -1));	
+            game.displayMessages();
+            return;
+        }        
+
         game.removeAllMessages();
         game.messagesToDisplay.push(new Message("Nothing to do with that.", COLOR_JORIS, -1, -1, -1));	
         game.displayMessages();
@@ -302,8 +393,8 @@ initGameChap3 = function(canvas) {
     iaBebeBerceau.onLookAt = function() {
         if (game.getVariableValue("bebePleure") == 1) {
             game.removeAllMessages();
-            game.messagesToDisplay.push(new Message("Hum. He's still crying.", COLOR_JORIS, -1, -1, -1));	
-            game.messagesToDisplay.push(new Message("What should I do?", COLOR_JORIS, -1, -1, -1));	
+            game.messagesToDisplay.push(new Message("Hum. He's crying.", COLOR_JORIS, -1, -1, -1));	
+            game.messagesToDisplay.push(new Message("<i>What do we do now?</i>", COLOR_JORIS, -1, -1, -1));	
             game.displayMessages();
             return;
         }
@@ -336,12 +427,20 @@ initGameChap3 = function(canvas) {
     iaBebeBerceau.onUseWith = function() {
         if (game.getSelectedObject().id == "doudou") {
             game.removeAllMessages();
-            game.messagesToDisplay.push(new Message("Mission accomplished.", COLOR_JORIS, -1, -1, -1));	
+            game.messagesToDisplay.push(new Message("Welcome home.", COLOR_JORIS, -1, -1, -1));	
             game.displayMessages();
             game.removeItemFromInventory("doudou");
             game.setVariableValue("doudouTrouve", 1);
+            game.setVariableValue("doudouPerdu", 0);
+            updatePleurs();
             return;
         }
+        if (game.getSelectedObject().id == "thermometre" || game.getSelectedObject().id == "doliprane") {
+            game.removeAllMessages();
+            game.messagesToDisplay.push(new Message("I can not do that when the baby is in the bed.", COLOR_JORIS, -1, -1, -1));	
+            game.displayMessages();
+            return;
+        }        
         game.removeAllMessages();
         game.messagesToDisplay.push(new Message("There is nothing to do with that.", COLOR_JORIS, -1, -1, -1));	
         game.displayMessages();
@@ -390,19 +489,7 @@ initGameChap3 = function(canvas) {
         game.messagesToDisplay.push(new Message("There is nothing to do with that.", COLOR_JORIS, -1, -1, -1));	
         game.displayMessages();
     }
-    /*iaBerceauVide.onUseWith = function() {
-        if (game.getSelectedObject().id == "doudou") {
-            game.removeAllMessages();
-            game.messagesToDisplay.push(new Message("Mission accomplished.", COLOR_JORIS, -1, -1, -1));	
-            game.displayMessages();
-            game.removeItemFromInventory("doudou");
-            game.setVariableValue("doudouTrouve", 1);
-            return;
-        }
-        game.removeAllMessages();
-        game.messagesToDisplay.push(new Message("There is nothing to do with that.", COLOR_JORIS, -1, -1, -1));	
-        game.displayMessages();
-    }*/
+    
     ch3chambre.addInteractiveArea(iaBerceauVide);
 
 
@@ -488,7 +575,7 @@ initGameChap3 = function(canvas) {
         game.removeAllMessages();
         game.messagesToDisplay.push(new Message("Somedays, I feel like I'd throw myself in the bin and wait.", COLOR_PERSO, -1, -1, -1));
         game.messagesToDisplay.push(new Message("But not today.", COLOR_PERSO, -1, -1, -1));
-        game.displayMessages();           
+        game.displayMessages();       
     }
     iaPoubelle.onUseWith = function() {
         if (game.getSelectedObject().id == "coucheSale") {
@@ -574,10 +661,11 @@ initGameChap3 = function(canvas) {
     ch3chambre.addObject(biberon);
     
     
-    var doudou = new Item("doudou", "the cuddly toy", "./gamedata/images/doudouInScene.png", 730, 402, "./gamedata/images/doudou.png");
+    var doudou = new Item("doudou", "the cuddly toy", "./gamedata/images/doudouInScene.png", 483, 366, "./gamedata/images/doudou.png");
     doudou.isVisible = function() {
         return !game.getInventory().containsItem("doudou") && game.getVariableValue("doudouTrouve") == 0;   
     }
+    doudou.getOrientation = function() { return "E"; }
     doudou.onLookAtInScene = function() {
         game.removeAllMessages();
         game.messagesToDisplay.push(new Message("It's the kid's cuddly toy.", COLOR_PERSO, -1, -1, -1));
@@ -605,10 +693,94 @@ initGameChap3 = function(canvas) {
     ch3chambre.addObject(doudou);
  
     
+    // -- trousse de soins -- //
+    var iaTrousseDeSoins = new InteractiveArea("iaTrousse", "first aid kit", new Point(430, 200), 20);
+    iaTrousseDeSoins.getOrientation = function() { return "NW"; }
+    iaTrousseDeSoins.onLookAt = function() {
+        game.removeAllMessages();
+        game.messagesToDisplay.push(new Message("This first aid kit contains everything to diagnose and treat small injuries.", COLOR_PERSO, -1, -1, -1));
+        game.displayMessages(); 
+    }
+    iaTrousseDeSoins.getActionWord = function() { return "Open"; }
+    iaTrousseDeSoins.onUse = function() {
+        if (game.getInventory().containsItem("thermometre") && game.getInventory().containsItem("doliprane")) {
+            game.removeAllMessages();
+            game.messagesToDisplay.push(new Message("I already took its content.", COLOR_PERSO, -1, -1, -1));
+            game.displayMessages(); 
+            return;
+        }
+        if (! game.getInventory().containsItem("thermometre")) {
+            game.addItemToInventory("thermometre");   
+        }
+        if (! game.getInventory().containsItem("doliprane")) {
+            game.addItemToInventory("doliprane");   
+        }
+        game.removeAllMessages();
+        game.messagesToDisplay.push(new Message("This can be useful.", COLOR_PERSO, -1, -1, -1));
+        game.displayMessages(); 
+    }
+    iaTrousseDeSoins.onUseWith = function() {
+        if (game.getSelectedObject().id == "doliprane" || game.getSelectedObject().id == "thermometre") {
+            game.removeItemFromInventory(game.getSelectedObject().id);            
+            game.removeAllMessages();
+            game.messagesToDisplay.push(new Message("Back to where it belongs.", COLOR_PERSO, -1, -1, -1));
+            game.displayMessages(); 
+            return;
+        }
+        game.removeAllMessages();
+        game.messagesToDisplay.push(new Message("No, I can't put that here.", COLOR_PERSO, -1, -1, -1));
+        game.displayMessages(); 
+    }
+    ch3chambre.addInteractiveArea(iaTrousseDeSoins);
+    
+    // -- thermometre -- //
+    var thermometre = new Item("thermometre", "the thermometer", null, 0, 0, "./gamedata/images/thermometre.png");
+    thermometre.onLookAtInInventory = function() {
+        game.removeAllMessages();
+        game.messagesToDisplay.push(new Message("This can be used to check the baby's temperature.", COLOR_PERSO, -1, -1, -1));
+        game.displayMessages(); 
+    }
+    game.allObjects["thermometre"] = thermometre;
+    
+    // -- doliprane -- //
+    var doliprane = new Item("doliprane", "the syrup", null, 0, 0, "./gamedata/images/doliprane.png");
+    doliprane.onLookAtInInventory = function() {
+        game.removeAllMessages();
+        game.messagesToDisplay.push(new Message("This can be used to decease the baby's temperature.", COLOR_PERSO, -1, -1, -1));
+        game.displayMessages(); 
+    }
+    game.allObjects["doliprane"] = doliprane;
+    
+    // -- etagere -- //
+    var iaEtagere = new InteractiveArea("iaEtagere", "the shelf", new Point(190, 185), 10);
+    iaEtagere.isVisible = function() { return game.getInventory().containsItem("biberon"); }
+    iaEtagere.onLookAt = function() {
+        game.removeAllMessages();
+        game.messagesToDisplay.push(new Message("This is where I took the bab'y bottle.", COLOR_PERSO, -1, -1, -1));
+        game.displayMessages(); 
+    }
+    iaEtagere.onUseWith = function() {
+        if (game.getSelectedObject().id == "biberon") {
+            game.removeItemFromInventory("biberon"); 
+            game.getCurrentScene().redraw();
+            game.removeAllMessages();
+            game.messagesToDisplay.push(new Message("Back to where it belongs.", COLOR_PERSO, -1, -1, -1));
+            game.displayMessages(); 
+            return;
+        }
+        game.removeAllMessages();
+        game.messagesToDisplay.push(new Message("This is where I took the bab'y bottle.", COLOR_PERSO, -1, -1, -1));
+        game.displayMessages(); 
+    }
+    ch3chambre.addInteractiveArea(iaEtagere);
+                        
+    
+    
+    
     /*****   CUISINE     *****/
         
     // eau 
-    var bouteilleEau = new Item("bouteilleEau", "bottle of water", "./gamedata/images/bouteilleEau.png", 792, 270, "./gamedata/images/bouteilleEau.png");
+    var bouteilleEau = new Item("bouteilleEau", "the bottle of water", "./gamedata/images/bouteilleEau.png", 792, 270, "./gamedata/images/bouteilleEau.png");
     bouteilleEau.onLookAtInScene = bouteilleEau.onLookAtInInventory = function() {
         game.removeAllMessages();
         game.messagesToDisplay.push(new Message("This water is good for the babies.", COLOR_PERSO, -1, -1, -1));
@@ -706,6 +878,7 @@ initGameChap3 = function(canvas) {
     ch3couloir.addPassage(paCouloirChambre);
     
     var paChambreCouloir = new Passage(46, 461, ch3couloir, new Point(472, 292, 0.5));
+    paChambreCouloir.isVisible = function() { return game.getVariableValue("bebeSurTable") == 0; }
     ch3chambre.addPassage(paChambreCouloir);
     
     var paCuisineCouloir = new Passage(970, 575, ch3couloir, new Point(602, 476, 1.2));
@@ -716,7 +889,6 @@ initGameChap3 = function(canvas) {
     ch3couloir.addPassage(paCouloirCuisine);
     
     /*** variables ***/
-    game.setVariableValue("firstVisitInBedroom", 1);
     game.setVariableValue("couloirAllume", 0);
     game.setVariableValue("bebePris", 0);
     game.setVariableValue("bebePleure", 1);
@@ -727,6 +899,37 @@ initGameChap3 = function(canvas) {
     game.setVariableValue("laitChaud", 0);
     game.setVariableValue("bebeNourri", 0);
     game.setVariableValue("doudouTrouve", 0);
+
+    // enigmes
+    game.setVariableValue("doudouPerdu", 0);
+    game.setVariableValue("temperatureElevee", 0);
+    game.setVariableValue("bebeAffame", 0);
+    game.setVariableValue("couchePleine", 0);
+    
+    for (var i=0; i < 4; i++) {
+        var variable = "couchePleine";
+        switch (Math.floor(Math.random()*4)) {
+            case 0: variable = "doudouPerdu"; break;
+            case 1: variable = "temperatureElevee"; break;
+            case 2: variable = "bebeAffame"; break;
+        }
+        game.setVariableValue(variable, 1);
+    }
+
+    // debug
+    alert("doudouPerdu = " + game.getVariableValue("doudouPerdu") + ", temperatureElevee = " + game.getVariableValue("temperatureElevee") + ", bebeAffame = " +  game.getVariableValue("bebeAffame") + ", couchePleine = " + game.getVariableValue("couchePleine"));
+}
+
+
+updatePleurs = function() {
+    var p = 0;
+    if (game.getVariableValue("doudouPerdu") == 1 || 
+        game.getVariableValue("temperatureElevee") == 1 || 
+        game.getVariableValue("bebeAffame") == 1 || 
+        game.getVariableValue("couchePleine") == 1) {
+        p = 1;
+    }
+    game.setVariableValue("bebePleure", p);   
 }
 
 
