@@ -1115,7 +1115,7 @@ initGameChap3 = function(canvas) {
     }
 
     // debug
-    /*alert("doudouPerdu = " + game.getVariableValue("doudouPerdu") + ", tetinePerdue = " + game.getVariableValue("tetinePerdue") + ", temperatureElevee = " + game.getVariableValue("temperatureElevee") + ", bebeAffame = " +  game.getVariableValue("bebeAffame") + ", couchePleine = " + game.getVariableValue("couchePleine"));*/
+    console.log("doudouPerdu = " + game.getVariableValue("doudouPerdu") + ", tetinePerdue = " + game.getVariableValue("tetinePerdue") + ", temperatureElevee = " + game.getVariableValue("temperatureElevee") + ", bebeAffame = " +  game.getVariableValue("bebeAffame") + ", couchePleine = " + game.getVariableValue("couchePleine"));
 }
 
 
