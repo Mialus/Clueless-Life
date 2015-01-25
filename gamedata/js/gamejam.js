@@ -37,26 +37,22 @@ var perso = new Character(imgPerso, arret, movement, null, "gamedata/sounds/foot
 
 
 var chapters = [ 
-	// chapitre 1
-	{ "splashScreen": "./gamedata/images/1/chapitre1.png",
-  	  "title" : "Clueless baby", 
-	  "after" : function() {
-        alert("Chapter not available");
-      }
-	},
-	// chapitre 2				
-	{ "splashScreen": "./gamedata/images/2/chapitre2.jpg",
-	  "title" : "Clueless teenagers",
-	  "after" : function() {
-            alert("Champter not available.");   
-      }
-	},
+	
     // chapitre 3
     { "splashScreen" : "./gamedata/images/3/chaptre3.jpg",
       "title" : "Clueless parents",
       "after" : function() {
-        game.setCurrentScene("ch3-chambre");
-        game.loadWithLocation(null);
+          game.audio.load("gamedata/sounds/atmo-thunder-rain.mp3", function (buffer) {
+            game.audio.play(buffer, 0.2, true);
+
+        });
+        perso.loadAudio();
+          
+        game.setCurrentScene("ch3-couloir");
+        game.getCurrentScene().loadWithLocation(game.getCurrentScene().getPlayerDisplay().getDefaultPosition());
+          
+        game.setCharacterOrientation("SW");
+        game.messagesToDisplay = [];
     }
     }
         
@@ -68,13 +64,7 @@ initGame = function(canvas) {
 	
 	// game
 	game = new Game();
-    
-    game.audio.load("gamedata/sounds/atmo-thunder-rain.mp3", function (buffer) {
-        game.audio.play(buffer, 0.2, true);
         
-    });
-    perso.loadAudio();
-    
 	initGameChap3(canvas);
 	
 	return game;
@@ -1117,7 +1107,7 @@ initGameChap3 = function(canvas) {
     }
 
     // debug
-    alert("doudouPerdu = " + game.getVariableValue("doudouPerdu") + ", tetinePerdue = " + game.getVariableValue("tetinePerdue") + ", temperatureElevee = " + game.getVariableValue("temperatureElevee") + ", bebeAffame = " +  game.getVariableValue("bebeAffame") + ", couchePleine = " + game.getVariableValue("couchePleine"));
+    /*alert("doudouPerdu = " + game.getVariableValue("doudouPerdu") + ", tetinePerdue = " + game.getVariableValue("tetinePerdue") + ", temperatureElevee = " + game.getVariableValue("temperatureElevee") + ", bebeAffame = " +  game.getVariableValue("bebeAffame") + ", couchePleine = " + game.getVariableValue("couchePleine"));*/
 }
 
 

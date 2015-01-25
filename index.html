@@ -3,10 +3,10 @@
 
 <head>
 	<meta charset="UTF-8">
-	<meta name="title" content="Day of the Cancoillotte">
-	<meta name="description" content="Un jeu d'aventure Point&Click développé durant la Game Cancoillotte 2014 (et un peu après)">
+	<meta name="title" content="Clueless Concoillote">
+	<meta name="description" content="Un jeu d'aventure Point&Click développé durant la Game Cancoillotte 2015">
 	<link rel="image_src" href="http://members.femto-st.fr/sites/femto-st.fr.frederic-dadeau/files/content/GameJam2014/gamedata/images/DotC-fb.jpg" />
-	<title>Game Jam 2014</title>
+	<title>Global Game Jam 2015</title>
 	<style type="text/css">
 .bcInv {
 	float: left; 
@@ -86,15 +86,15 @@
 <body onload="init()">
 
 	<div id="bcSplashScreen">
-		<div id="btnDemarrer" onclick="clickDemarrer()">Commencer</div>
+		<div id="btnDemarrer" onclick="clickDemarrer()">Start</div>
 	</div>
 
 	<div id="gamearea" style="cursor: url(images/cursor.png) 0 0, auto; width: 1004px; height: 564px; margin: 20px auto;">
 		<div id="bcText"></div>
 		<canvas id="cvs" width="1000" height="470" style="border: solid 2px #000;">
-		Votre navigateur ne supporte pas les canvas... Dommage.
+		Your browser is not compatible with this game. Please try with another one.
 		</canvas>
-		<div id="bcActionLine" style="width: 900px; margin: 0px auto; height: 20px; text-align: center; font-family: verdana; font-size: 16px;">Aller vers</div>
+		<div id="bcActionLine" style="width: 900px; margin: 0px auto; height: 20px; text-align: center; font-family: verdana; font-size: 16px;">...</div>
 		<div id="bcInventory" style="float: left; bottom: 0px;" >
 			<div id="bcInv0" class="bcInv" onclick="clickInventory(0)" onmouseover="mouseOverInventory(0)" onmouseout="mouseOutInventory()"></div>
 			<div id="bcInv1" class="bcInv" onclick="clickInventory(1)" onmouseover="mouseOverInventory(1)" onmouseout="mouseOutInventory()"></div>
