@@ -444,7 +444,7 @@ function CharacterDisplay(_chId, _charObj, _charMesh, _defaultPosition) {
 	
 		// computes the action that has to be done when the point has been reached (null if none)
 		actionWhenPointIsReached = actionAndDestination.action;
-
+        
 		// computes the orientation when the point has been reached
 		orientationWhenPointIsReached = actionAndDestination.orientation;
 

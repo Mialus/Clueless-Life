@@ -10,14 +10,3 @@ This game, developed during the 2015 Global Game Jam, proposes to impersonate a 
 
 It is important to notice that there are a several reasons why the baby may be crying (e.g. he might be hungry, or need his dummy, etc.). Each time the game is ran, a combination of these objectives is chosen, to create a unique experience each time you play. 
 
-<<<<<<< HEAD
-<<<<<<< HEAD
-WORKS ON FIREFOX ONLY
-=======
-To improve the game experience, please [ download the following zip archive](members.femto-st.fr/sites/femto-st.fr.frederic-dadeau/files/content/GlobalGameJam2015/clueless-life.zip),
-extract it, and open index.html exclusively with Firefox.
->>>>>>> 56b591bca44469a2d5305437b677ca36bc779851
-=======
-[Give it a try (exclusively with Mozilla Firefox)](http://members.femto-st.fr/sites/femto-st.fr.frederic-dadeau/files/content/GlobalGameJam2015/index.html). To improve the game experience, please [download the following zip archive](http://members.femto-st.fr/sites/femto-st.fr.frederic-dadeau/files/content/GlobalGameJam2015/clueless-life.zip),
-extract it, and open index.html, again **exclusively with Firefox**.
->>>>>>> aec9fe0a0f7728bbd6abad737467f58193c938de

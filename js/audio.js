@@ -100,15 +100,21 @@ function Audio() {
     };
     
     this.stop = function (source) {
-        if (!source && currentLoop) {
-            source = currentLoop;
-        }
-        if (source) {
-            if (source.timer) {
-                clearTimeout(source.timer);
-                source.timer = null;
+        try {
+            if (!source && currentLoop) {
+                source = currentLoop;
             }
-            source.stop(0);
+            if (source) {
+                if (source.timer) {
+                    clearTimeout(source.timer);
+                    source.timer = null;
+                }            
+                source.stop(0);
+
+            }
+        }
+        catch (err) {
+            console.log(err.message);   
         }
     };
     

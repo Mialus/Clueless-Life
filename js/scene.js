@@ -304,7 +304,7 @@ function Scene(_name, _desc, _cvs, _bg, _ambients) {
 				if (passages[i].isVisible() && clickedPoint.distanceTo(passages[i].point) < 60) {
 					var act = new Action("passage", new Passage(passages[i].point.x,passages[i].point.y, passages[i].toScene, passages[i].startingPoint));
 					var dest = characters[playedCharacter].getCharacterMesh().getClosestPointAndSegment(passages[i].getClosestPoint());
-					return { "action" : act, "destination" : dest, "orientation" : passages[i].orientation };
+                    return { "action" : act, "destination" : dest, "orientation" : passages[i].orientation };
 				}
 			}
 		}		
@@ -564,10 +564,10 @@ function Action(_kind, _param) {
 	 *	@param	g	Game 	the current game
 	 */ 
 	this.execute = function(g) {	
-		if (this.kind == 'passage') {
-			g.setCurrentScene(this.param.toScene.getName());
-			g.getCurrentScene().loadWithLocation(this.param.startingPoint);
-			g.setCharacterOrientation(this.param.orientation);
+        if (this.kind == 'passage') {
+			game.setCurrentScene(this.param.toScene.getName());
+            game.getCurrentScene().loadWithLocation(this.param.startingPoint);
+			game.setCharacterOrientation(this.param.orientation);
 			return;
 		}
 		if (this.kind == 'use' || this.kind == 'lookat' || this.kind == 'use_with') {
@@ -575,9 +575,9 @@ function Action(_kind, _param) {
 			return;
 		}
 		if (this.kind = 'say') {
-			g.removeAllMessages();
-			g.messagesToDisplay.push(this.param);
-			g.displayMessages();
+			game.removeAllMessages();
+			game.messagesToDisplay.push(this.param);
+			game.displayMessages();
 			return;	
 		}
 	}
