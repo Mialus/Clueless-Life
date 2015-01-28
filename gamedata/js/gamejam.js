@@ -307,16 +307,17 @@ initGameChap3 = function(canvas) {
             game.setVariableValue("bebeChange", 1);
             
             game.audio.load("gamedata/sounds/clean-bottom-back-02.mp3", function (buffer) {
-                source = game.audio.play(buffer);
-                source.addEventListener("ended", function () {
+                var source =game.audio.play(buffer);
+                source.onended= function (ev) {
+                    
                     
                     game.audio.load("gamedata/sounds/diaper-scratch-1.mp3", function (buffer) {
-                        source = game.audio.play(buffer);
-                        source.addEventListener("ended", function () {
+                        var source =game.audio.play(buffer);
+                        source.onended = function (ev) {
                             game.audio.load("gamedata/sounds/diaper-scratch-2.mp3", function (buffer) {
                                 game.audio.play(buffer);
                             });
-                        });
+                        };
                     });
             
                     game.removeAllMessages();                                        
@@ -333,7 +334,7 @@ initGameChap3 = function(canvas) {
                     game.setVariableValue("couchePleine", 0);
                     updatePleurs();
                     game.displayMessages();
-                });
+                };
             });
             return;
         }
@@ -389,21 +390,21 @@ initGameChap3 = function(canvas) {
                 game.setVariableValue("bebeAffame", 0);
                 
                 game.audio.load("gamedata/sounds/baby-drink.mp3", function (buffer) {
-                    source = game.audio.play(buffer, 0.25);
-                    source.addEventListener("ended", function () {
+                    var source =game.audio.play(buffer, 0.25);
+                    source.onended = function (ev) {
                         
                         updatePleurs();
                         
                         game.audio.load("gamedata/sounds/baby-burp.mp3", function (buffer) {
-                            source = game.audio.play(buffer, 0.5);
-                            source.addEventListener("ended", function () {
+                            var source =game.audio.play(buffer, 0.5);
+                            source.onended = function (ev) {
                                 bable();
-                            });
+                            };
                         });
                         game.removeAllMessages();
                         game.messagesToDisplay.push(new Message("Now he is fed.", COLOR_JORIS, -1, -1, -1));	
                         game.displayMessages();
-                    });
+                    };
                 });
                 
                 
@@ -425,8 +426,8 @@ initGameChap3 = function(canvas) {
             game.audio.stop(babyIsBabling);
             babyIsBabling = false;
             game.audio.load("gamedata/sounds/baby-dummy.mp3", function (buffer) {
-                source = game.audio.play(buffer);
-                source.addEventListener("ended", function () { bable(); });
+                var source =game.audio.play(buffer);
+                source.onended = function (ev) { bable(); };
             });
             updatePleurs();
             return;
@@ -482,7 +483,7 @@ initGameChap3 = function(canvas) {
         game.audio.load("gamedata/sounds/babling-01.mp3", function (buffer) {
             bable = function () {
                 babyIsBabling = game.audio.play(buffer, 0.25);
-                babyIsBabling.addEventListener("ended", function () { if (babyIsBabling != false) bable();} );
+                babyIsBabling.onended = function (ev) { if (babyIsBabling != false) bable();} ;
             };
             bable();
         });
@@ -497,10 +498,10 @@ initGameChap3 = function(canvas) {
             updatePleurs();
             game.getCurrentScene().stop();
             game.audio.load("gamedata/sounds/babling-02.mp3", function (buffer) {
-                source = game.audio.play(buffer, 0.25);
-                source.addEventListener("ended", function () {
+                var source =game.audio.play(buffer, 0.25);
+                source.onended = function (ev) {
                     game.getCurrentScene().startAudio(); 
-                });
+                };
             });
             game.removeItemFromInventory("doudou");
             
@@ -521,10 +522,10 @@ initGameChap3 = function(canvas) {
             updatePleurs();
             game.getCurrentScene().stop();
             game.audio.load("gamedata/sounds/baby-dummy.mp3", function (buffer) {
-                source = game.audio.play(buffer);
-                source.addEventListener("ended", function () {
+                var source =game.audio.play(buffer);
+                source.onended = function (ev) {
                     game.getCurrentScene().startAudio(); 
-                });
+                };
             });
             game.removeItemFromInventory("tetine");
             
@@ -721,10 +722,10 @@ initGameChap3 = function(canvas) {
     }
     biberon.onUseInScene = function() {
         game.audio.load("gamedata/sounds/bottle-out-microwave.mp3", function (buffer) {
-            source = game.audio.play(buffer);
-            source.addEventListener("ended", function () {
+            var source =game.audio.play(buffer);
+            source.onended = function (ev) {
                 game.addItemToInventory("biberon");                   
-            });
+            };
         });
         
     }
@@ -746,13 +747,13 @@ initGameChap3 = function(canvas) {
         if (game.getVariableValue("poudreOK") == 1) {
             game.setVariableValue("laitOK", 1);
             game.audio.load("gamedata/sounds/fill-bottle-full.mp3", function (buffer) {
-                source = game.audio.play(buffer);
-                source.addEventListener("ended", function () {
+                var source =game.audio.play(buffer);
+                source.onended = function (ev) {
                     
                     game.removeAllMessages();
                     game.messagesToDisplay.push(new Message("The milk is ready. I now need to warm it.", COLOR_PERSO, -1, -1, -1));
                     game.displayMessages(); 
-                });
+                };
             });
             
             return;
@@ -877,14 +878,14 @@ initGameChap3 = function(canvas) {
         if (game.getSelectedObject().id == "biberon") {
             
             game.audio.load("gamedata/sounds/bottle-on-shelf.mp3", function (buffer) {
-                source = game.audio.play(buffer);
-                source.addEventListener("ended", function () {
+                var source =game.audio.play(buffer);
+                source.onended = function (ev) {
                     game.removeItemFromInventory("biberon"); 
                     game.getCurrentScene().redraw();
                     game.removeAllMessages();
                     game.messagesToDisplay.push(new Message("Back to where it belongs.", COLOR_PERSO, -1, -1, -1));
                     game.displayMessages(); 
-                });
+                };
             });
             
             return;
@@ -910,10 +911,10 @@ initGameChap3 = function(canvas) {
     bouteilleEau.getActionWord = function() { return "Pick"; }
     bouteilleEau.onUseInScene = function() {
         game.audio.load("gamedata/sounds/bottle-off-the-table.mp3", function (buffer) {
-            source = game.audio.play(buffer, 0.65);
-            source.addEventListener("ended", function () {
+            var source =game.audio.play(buffer, 0.65);
+            source.onended = function (ev) {
                 game.addItemToInventory("bouteilleEau");   
-            });
+            };
         });
         
     }
@@ -945,16 +946,14 @@ initGameChap3 = function(canvas) {
                 game.displayMessages();  
                 
                 game.audio.play(bufferPowder, 2.0);
-                source = game.audio.play(bufferSpoon);
+                var source =game.audio.play(bufferSpoon);
                 
-                source.addEventListener("ended", function () {
-                
-                    
-                    game.removeAllMessages();
+                source.onended = function (ev) {
+                   game.removeAllMessages();
                     game.messagesToDisplay.push(new Message(" ...  ... ... 42. OK. Done.", COLOR_PERSO, -1, -1, -1));
                     game.displayMessages();  
                     
-                });
+                };
                 
             });
         });
@@ -992,15 +991,15 @@ initGameChap3 = function(canvas) {
         game.setVariableValue("laitChaud", 1);
         game.audio.load("gamedata/sounds/microwave-cycle-full.mp3", function (buffer) {
             
-            source = game.audio.play(buffer);
-            source.addEventListener("ended", function () {
+            var source =game.audio.play(buffer);
+            source.onended = function (ev) {
 
                 
                 game.removeAllMessages();
                 game.messagesToDisplay.push(new Message("Here we go.", COLOR_PERSO, -1, -1, -1));
                 game.displayMessages();   
 
-            });
+            };
             
         });
         
